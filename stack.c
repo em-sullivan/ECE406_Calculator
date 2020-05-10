@@ -45,18 +45,19 @@ int stack_isfull(struct stack *st)
     return st->top == (st->maxsize - 1);
 }
 
-void push(struct stack *st, int val)
+int push(struct stack *st, int val)
 {
     //Checks to see if the stack is full
     if (stack_isfull(st)) {
         printf("Stack overflow\n");
-        return;
+        return 1;
     }
 
     st->data[++st->top] = val;
+    return 0;
 }
 
-int pop(struct stack *st)
+int pop(struct stack *st, int *val)
 {
     // Checks if stack is empty
     if (stack_isempty(st)) {
@@ -64,7 +65,8 @@ int pop(struct stack *st)
         return -1;
     }
 
-    return st->data[st->top--];
+    *val = st->data[st->top--];
+    return 0;
 }
 
 int peek(struct stack *st)

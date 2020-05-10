@@ -25,32 +25,40 @@ int eval_postfix(char *exp)
             push(st, tempnum);
 
         } else {
-            num1 = pop(st);
-            num2 = pop(st);
+            pop(st, &num1);
+            pop(st, &num2);
 
-            switch(*cp) {
-                case '+':
-                    num3 = num1 + num2;
-                    break;
-                case '-':
-                    num3 = num1 - num2;
-                    break;
-                case '*':
-                    num3 = num1 * num2;
-                    break;
-                case '/':
-                    num3 = num1 / num2;
-                    break;
-                default: break;
-            }
+            num3 = express(*cp, num1, num2);
 
             push(st, num3);
         }
         cp++;
     }
-    tempnum = pop(st);
+    pop(st, &tempnum);
     free_stack(st);
     return tempnum;
-   
+}
 
+int express(char op, int n1, int n2)
+{
+    int ans;
+
+     switch(op) {
+                case '+':
+                    ans = n1 + n2;
+                    break;
+                case '-':
+                    ans = n1 - n2;
+                    break;
+                case '*':
+                    ans = n1 * n2;
+                    break;
+                case '/':
+                    ans = n1 / n2;
+                    break;
+                default: break;
+    }
+
+    return ans;
+        
 }

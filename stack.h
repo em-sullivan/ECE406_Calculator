@@ -20,8 +20,8 @@ struct stack *init_stack(int size);
 int stack_size(struct stack *st);
 int stack_isempty(struct stack *st);
 int stack_isfull(struct stack *st);
-void push(struct stack *st, int val);
-int pop(struct stack *st);
+int push(struct stack *st, int val);
+int pop(struct stack *st, int *val);
 int peek(struct stack *st);
 void free_stack(struct stack *st);
 
