@@ -1,5 +1,5 @@
 TARGET = ${T}
-OBJS = ${T}.o stack.o
+OBJS = ${T}.o stack.o calc.o
 CFLAGS = -Wall -o2 -g
 CC = gcc
 
@@ -12,3 +12,4 @@ clean:
 	rm -f ${TARGET} ${OBJS} *core
 
 stack.o: stack.h
+calc.o: calc.h

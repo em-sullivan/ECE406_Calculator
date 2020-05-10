@@ -19,7 +19,7 @@ struct stack *init_stack(int size)
 
     st->maxsize = size;
     st->top = -1;
-    st->data = (char*)malloc(sizeof(char) * size);
+    st->data = (int*)malloc(sizeof(int) * size);
     if(st->data == NULL) {
         printf("Error! Not enough memory!\n");
         free(st);
@@ -45,7 +45,7 @@ int stack_isfull(struct stack *st)
     return st->top == (st->maxsize - 1);
 }
 
-void push(struct stack *st, char val)
+void push(struct stack *st, int val)
 {
     //Checks to see if the stack is full
     if (stack_isfull(st)) {
@@ -67,7 +67,7 @@ int pop(struct stack *st)
     return st->data[st->top--];
 }
 
-char peek(struct stack *st)
+int peek(struct stack *st)
 {
     return st->data[st->top];
 }

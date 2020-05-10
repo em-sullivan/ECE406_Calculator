@@ -16,16 +16,16 @@ int main (int argc, char *argv[])
 
     st = init_stack(MAXSTACK);
 
-    push(st, '1');
-    push(st, '2');
-    push(st, '+');
-    push(st, '3');
+    push(st, 1);
+    push(st, 2);
+    push(st, 3);
+    push(st, 4);
 
-    printf("%c\n", peek(st));
+    printf("%d\n", peek(st));
     stackSize = stack_size(st);
     for (i = 0; i < stackSize; i++) {
         popval = pop(st);
-        printf("%c\n", popval);
+        printf("%d\n", popval);
     }
 
     free_stack(st);
