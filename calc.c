@@ -16,6 +16,7 @@ int eval_postfix(char *exp)
     char *cp;
     int tempnum, num1, num2, num3;
     struct stack *st;
+    int neg = 0;
 
     st = init_stack(MAXSTACK);
     if (st == NULL) {
@@ -29,9 +30,16 @@ int eval_postfix(char *exp)
         // Checks if value in string is a number
         if (isdigit(*cp)) {
             tempnum = tempnum * 10 + ((int)*cp - 48);
+        // Stores number into stack
         } else if (*cp == ',') {
+            if (neg)
+                tempnum *= -1;
             push(st, tempnum);
             tempnum = 0;
+            neg = 0;
+        // Makes number negative
+        } else if (*cp == '_') {
+            neg ^= 1;
         // Performs operation and stores back into stack
         } else {
             pop(st, &num1);
@@ -57,13 +65,13 @@ int express(char op, int n1, int n2)
             ans = n1 + n2;
             break;
         case '-':
-            ans = n1 - n2;
+            ans = n2 - n1;
             break;
         case '*':
             ans = n1 * n2;
             break;
         case '/':
-            ans = n1 / n2;
+            ans = n2 / n1;
             break;
         case '&':
             ans = n1 & n2;
@@ -114,7 +122,7 @@ int infix_to_postfix(char *inexp, char *postexp)
     posp = postexp;
 
     while(*inp != '\0') {
-        if (isdigit(*inp)) {
+        if (isdigit(*inp) || *inp == '_') {
             *posp = *inp;
             posp++;
         
