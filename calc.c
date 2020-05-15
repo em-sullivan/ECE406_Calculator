@@ -94,20 +94,22 @@ int precd(char op)
 
     return -1;
 }
-/*Doesnt Work!*/
+
 int infix_to_postfix(char *inexp, char *postexp)
 {
     struct stack *st;
     char *inp;
     char *posp;
     int noth;
-
+    
+    // Allocates memory for stack
     st = init_stack(MAXSTACK);
     if (st == NULL) {
         printf("Could not create struct!\n");
         return 1;
     }
 
+    // Initialises points to input and output expression
     inp = inexp;
     posp = postexp;
 
@@ -115,6 +117,8 @@ int infix_to_postfix(char *inexp, char *postexp)
         if (isdigit(*inp)) {
             *posp = *inp;
             posp++;
+        
+        // Handles values in parentheses
         } else if (*inp == '(') {
             push(st, *inp);
         } else if (*inp == ')') {
@@ -138,7 +142,14 @@ int infix_to_postfix(char *inexp, char *postexp)
             }
             push(st, *inp);
         }
+        
         inp++;
+
+        // Adds commas to seperate values
+        if (!(isdigit(*inp)) && isdigit(*(inp-1))) {
+            *posp = ',';
+            posp++;
+        }
     }
 
     while (!stack_isempty(st)) {
