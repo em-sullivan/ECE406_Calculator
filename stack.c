@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include "stack.h"
 
-struct stack *init_stack(int size)
+struct stack *init_stack(uint32_t size)
 {
     // Allocate memory for struct
     struct stack *st = (struct stack*)malloc(sizeof(struct stack));
@@ -19,7 +19,9 @@ struct stack *init_stack(int size)
 
     st->maxsize = size;
     st->top = -1;
-    st->data = (int*)malloc(sizeof(int) * size);
+
+    // Allocate memory for data of stack
+    st->data = (int32_t*)malloc(sizeof(int32_t) * size);
     if(st->data == NULL) {
         printf("Error! Not enough memory!\n");
         free(st);
@@ -30,22 +32,22 @@ struct stack *init_stack(int size)
 
 }
 
-int stack_size(struct stack *st)
+uint32_t stack_size(struct stack *st)
 {
     return st->top + 1;
 }
 
-int stack_isempty(struct stack *st)
+int8_t stack_isempty(struct stack *st)
 {
     return st->top == -1;
 }
 
-int stack_isfull(struct stack *st)
+int8_t stack_isfull(struct stack *st)
 {
     return st->top == (st->maxsize - 1);
 }
 
-int push(struct stack *st, int val)
+int8_t push(struct stack *st, int32_t val)
 {
     //Checks to see if the stack is full
     if (stack_isfull(st)) {
@@ -57,7 +59,7 @@ int push(struct stack *st, int val)
     return 0;
 }
 
-int pop(struct stack *st, int *val)
+int8_t pop(struct stack *st, int32_t *popval)
 {
     // Checks if stack is empty
     if (stack_isempty(st)) {
@@ -65,21 +67,23 @@ int pop(struct stack *st, int *val)
         return -1;
     }
 
-    *val = st->data[st->top--];
+    *popval = st->data[st->top--];
     return 0;
 }
 
-int peek(struct stack *st)
+int32_t peek(struct stack *st)
 {
     return st->data[st->top];
 }
 
 void free_stack(struct stack *st)
 {
+    // Checks to be sure its safe to free memory
     if (st == NULL) {
         return;
     }
-
-    free(st->data);
+    if (st-> data != NULL)
+        free(st->data);
+    
     free(st); 
 }
