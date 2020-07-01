@@ -7,9 +7,12 @@
 #ifndef CALC_H
 #define CALC_H
 
-int eval_postfix(char * expression);
-int express(char op, int n1, int n2);
+#include <stdint.h>
+
+float eval_postfix(char * expression);
+float express(char op, float n1, float n2);
 int precd(char op);
 int infix_to_postfix(char *inexp, char *postexp);
+
 
 #endif //CALC_H

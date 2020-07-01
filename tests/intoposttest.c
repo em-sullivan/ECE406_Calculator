@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 {
     char exp[40];;
     char ans[40];
-    int result;
+    float result;
 
     if (argc < 2) {
         strcpy(exp, "5*(2+3)");
@@ -23,9 +23,7 @@ int main(int argc, char *argv[])
     infix_to_postfix(exp, ans);
     printf("%s is %s\n", exp, ans);
     result = eval_postfix(ans);
-    printf("%d\n", result);
-
-
+    printf("%lf\n", result);
 
     return 0;
 }

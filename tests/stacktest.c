@@ -10,7 +10,7 @@
 int main (int argc, char *argv[])
 {
     struct stack *st; //Stack
-    int popval;
+    float popval;
     int stackSize;
     int i; // Index
 
@@ -21,11 +21,11 @@ int main (int argc, char *argv[])
     push(st, 3);
     push(st, 4);
 
-    printf("%d\n", peek(st));
+    printf("%f\n", peek(st));
     stackSize = stack_size(st);
     for (i = 0; i < stackSize; i++) {
         pop(st, &popval);
-        printf("%d\n", popval);
+        printf("%f\n", popval);
     }
 
     free_stack(st);

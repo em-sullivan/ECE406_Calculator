@@ -6,15 +6,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 #include "stack.h"
 #include "calc.h"
 
-
-int eval_postfix(char *exp)
+float eval_postfix(char *exp)
 {
     char *cp;
-    int tempnum, num1, num2, num3;
+    float num1, num2, num3;
+    char temp[20];
     struct stack *st;
     int negative = 0;
 
@@ -27,18 +28,20 @@ int eval_postfix(char *exp)
     // Sets char pointer to start of epxression
     cp = exp;
     // Number buffer
-    tempnum = 0;
+    strcpy(temp, "");
 
     while (*cp != '\0') {
         // Checks if value in string is a number
-        if (isdigit(*cp)) {
-            tempnum = tempnum * 10 + ((int)*cp - 48);
+        if (isdigit(*cp) || *cp == '.') {
+            strncat(temp, cp, 1);
         // Stores number into stack
         } else if (*cp == ',') {
+            num1 = strtof(temp, NULL);
             if (negative)
-                tempnum *= -1;
-            push(st, tempnum);
-            tempnum = 0;
+                num1 *= -1.0;
+            printf("%f\n", num1);
+            push(st, num1);
+            strcpy(temp, "");
             negative = 0;
             
         // Makes number negative
@@ -55,14 +58,14 @@ int eval_postfix(char *exp)
     }
 
     // Final result
-    pop(st, &tempnum);
+    pop(st, &num1);
     free_stack(st);
-    return tempnum;
+    return num1;
 }
 
-int express(char op, int n1, int n2)
+float express(char op, float n1, float n2)
 {
-    int ans;
+    float ans;
 
     switch(op) {
         case '+':
@@ -78,13 +81,13 @@ int express(char op, int n1, int n2)
             ans = n2 / n1;
             break;
         case '&':
-            ans = n1 & n2;
+            ans = (int)n1 & (int)n2;
             break;
         case '|':
-            ans = n1 | n2;
+            ans = (int)n1 | (int)n2;
             break;
         case '^':
-            ans = n1 ^ n2;
+            ans = (int)n1 ^ (int)n2;
             break;
         default: break;
     }
@@ -103,7 +106,7 @@ int precd(char op)
             return 2;
         default: break;
     }
-
+    
     return -1;
 }
 
@@ -112,7 +115,7 @@ int infix_to_postfix(char *inexp, char *postexp)
     struct stack *st;
     char *infixp;
     char *postfixp;
-    int noth;
+    float noth;
     
     st = init_stack(MAXSTACK);
     if (st == NULL) {
@@ -125,7 +128,7 @@ int infix_to_postfix(char *inexp, char *postexp)
     postfixp = postexp;
 
     while(*infixp != '\0') {
-        if (isdigit(*infixp) || *infixp == '_') {
+        if (isdigit(*infixp) || *infixp == '_' || *infixp == '.') {
             *postfixp = *infixp;
             postfixp++;
         
@@ -157,7 +160,7 @@ int infix_to_postfix(char *inexp, char *postexp)
         infixp++;
 
         // Adds commas to seperate values
-        if (!(isdigit(*infixp)) && isdigit(*(infixp-1))) {
+        if ((!(isdigit(*infixp)) && *infixp != '.') && isdigit(*(infixp-1))) {
             *postfixp = ',';
             postfixp++;
         }
