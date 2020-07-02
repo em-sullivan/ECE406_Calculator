@@ -39,7 +39,6 @@ float eval_postfix(char *exp)
             num1 = strtof(temp, NULL);
             if (negative)
                 num1 *= -1.0;
-            printf("%f\n", num1);
             push(st, num1);
             strcpy(temp, "");
             negative = 0;
@@ -174,4 +173,25 @@ int infix_to_postfix(char *inexp, char *postexp)
     *postfixp = '\0';
     free_stack(st);
     return 0;
+}
+
+void print_binary(float val)
+{
+    int i;
+    int leading_zero = 0;
+    unsigned int mask = 0x80000000;
+    // Casts float as into for binary
+    int binary = (int)val;
+    
+    for (i = 0; i < 32; i++) {
+        if (binary & (mask >> i)) {
+            printf("1");
+            leading_zero = 1;
+        } else {
+            if (leading_zero)
+                printf("0");
+        }    
+    }
+
+    printf("\n");
 }
