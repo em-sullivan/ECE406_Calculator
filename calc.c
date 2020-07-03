@@ -175,16 +175,14 @@ int infix_to_postfix(char *inexp, char *postexp)
     return 0;
 }
 
-void print_binary(float val)
+void print_binary(int val)
 {
     int i;
     int leading_zero = 0;
     unsigned int mask = 0x80000000;
-    // Casts float as into for binary
-    int binary = (int)val;
-    
+
     for (i = 0; i < 32; i++) {
-        if (binary & (mask >> i)) {
+        if (val & (mask >> i)) {
             printf("1");
             leading_zero = 1;
         } else {
@@ -194,4 +192,63 @@ void print_binary(float val)
     }
 
     printf("\n");
+}
+
+void print_hex(int val)
+{
+    int i, j;
+    int leading_zero = 0;
+    char hex_table[] = {'0', '1', '2', '3', '4', '5', '6', '7',
+                        '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+    unsigned int mask = 0xF;
+
+    printf("0x");
+    for (i = 0; i < 8; i++) {
+        j = (val >> (28 - 4 * i) & mask);
+        if (leading_zero || j != 0) {
+            printf("%c", hex_table[j]);
+            leading_zero = 1;
+        }
+    }
+    printf("\n");
+}
+
+void print_oct(int val)
+{
+    int i, j;
+    int leading_zero = 0;
+    char oct_table[] = {'0', '1', '2', '3', '4', '5', '6', '7'};
+    unsigned int mask = 0x7;
+
+    /*
+     * NEED TO FIX NEGATIVE NUMBERS
+     */
+    for (i = 0; i < 11; i++) {
+        j = (val >> (30 - 3 * i) & mask);
+        if (leading_zero || j != 0) {
+            printf("%c", oct_table[j]);
+            leading_zero = 1;
+        } 
+    }
+    printf("\n");
+}
+
+void print_mode(int val, int mode)
+{
+    switch(mode) {
+        case DEC:
+            printf("%d\n", val);
+            break;
+        case BIN:
+            print_binary(val);
+            break;
+        case OCT:
+            printf("%o\n", val);
+            break;
+        case HEX:
+            printf("%X\n", val);
+            break;
+        default:
+            printf("Error! Not a valid mode!");
+    }
 }

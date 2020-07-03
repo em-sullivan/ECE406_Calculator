@@ -25,6 +25,5 @@ int main(int argc, char *argv[])
     result = eval_postfix(ans);
     printf("%lf\n", result);
 
-    print_binary(result);
     return 0;
 }
