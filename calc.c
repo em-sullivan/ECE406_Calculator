@@ -236,10 +236,7 @@ void print_oct(int val)
 void print_mode(int val, int mode)
 {
     switch(mode) {
-        case DEC:
-            printf("%d\n", val);
-            break;
-        case BIN:
+            case BIN:
             print_binary(val);
             break;
         case OCT:
@@ -250,7 +247,8 @@ void print_mode(int val, int mode)
             //printf("%X\n", val);
             print_hex(val);
             break;
+        case DEC:
         default:
-            printf("Error! Not a valid mode!");
+            printf("%d\n", val);
     }
 }
