@@ -243,10 +243,12 @@ void print_mode(int val, int mode)
             print_binary(val);
             break;
         case OCT:
-            printf("%o\n", val);
+            //printf("%o\n", val);
+            print_oct(val);
             break;
         case HEX:
-            printf("%X\n", val);
+            //printf("%X\n", val);
+            print_hex(val);
             break;
         default:
             printf("Error! Not a valid mode!");
