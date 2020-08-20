@@ -1,5 +1,6 @@
-OBJS = ../stack.o ../calc.o
-CFLAGS = -Wall -o2 -g
+CALCPATH = ../
+OBJS = ${CALCPATH}stack.o ${CALCPATH}calc.o
+CFLAGS = -Wall -o2 -g -I${CALCPATH}
 CC = gcc
 
 all: stacktest postfixtest intoposttest printtest
