@@ -1,10 +1,13 @@
 # modified 1/31/16 by Chris Martin
 # make flash now finds where STM board is mounted and
 # directly copies the TARGET.bin without the need for stlink
+
+# NOTE: Only using this makefile temporarly to test
+# some of the software written
+
 TARGET= lcd-test
 
-OBJS  = lcd.o lcd-test.o timer.o leds_hal.o
-
+OBJS  = lcd.o lcd-test.o timer.o leds_hal.o ../calc.o ../stack.o
 INSTALLDIR = /usr/local/stmdev/
 ARCH = STM32L476xx
 
@@ -16,7 +19,7 @@ OBJCOPY=arm-none-eabi-objcopy
 INCDIRS = -I$(INSTALLDIR)/include -I.
 LIBDIRS = -L$(INSTALLDIR)/lib
 
-LIBS= -l$(ARCH) -lm
+LIBS= -lece486_$(ARCH) -l$(ARCH) -lm
 
 LINKSCRIPT = $(INSTALLDIR)/lib/$(ARCH)_FLASH.ld
 

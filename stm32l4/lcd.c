@@ -32,7 +32,8 @@ void lcd_init_i2c()
 {
     // I2C configuration
     lcd_handler.Instance = I2C1;
-    lcd_handler.Init.Timing = 0x2000090E; // Fix this value later
+    lcd_handler.Init.Timing = 0x20E06893;
+    // lcd_handler.Init.Timing = 0x00A04C6C; // Fix this value later
     lcd_handler.Init.OwnAddress1 = 0;
     lcd_handler.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
     lcd_handler.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED;
@@ -45,10 +46,12 @@ void lcd_init_i2c()
     HAL_I2C_Init(&lcd_handler);
     if (HAL_I2C_IsDeviceReady(&lcd_handler, 0x3F << 1, 3, 1000) != HAL_OK)
         while (1);
+    HAL_I2CEx_AnalogFilter_Config(&lcd_handler, I2C_ANALOGFILTER_ENABLED);
 }
 
 void lcd_init()
 {
+    // Enable clock, pins and I2C
     __I2C1_CLK_ENABLE();
     lcd_init_i2c_pins();
     lcd_init_i2c();
@@ -71,7 +74,9 @@ void lcd_init()
     // Set cursor direction - INC from left to right
     lcd_command(LCD_ENTRY | LCD_ENTRY_INC);
 
+    // Clear screen
     lcd_command(LCD_CLEAR);
+    
     // Turn on display, cursor on, cursor blinks
     lcd_command(LCD_DISPLAY | LCD_DIS_ON | LCD_CURS_ON | LCD_BLINKS);
 }
@@ -83,7 +88,7 @@ void write_nibble(uint8_t byte)
     buf[1] = byte | LCD_BL;
 
     HAL_I2C_Master_Transmit(&lcd_handler, LCD_SLAVE << 1, &buf[0], 1, 1);
-    mdelay(2);
+    mdelay(1);
     HAL_I2C_Master_Transmit(&lcd_handler, LCD_SLAVE << 1, &buf[1], 1, 1);
 }
 

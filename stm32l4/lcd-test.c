@@ -3,25 +3,35 @@
  * Test file for i2c LCD
  */
 
+#include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include "leds_hal.h"
 #include "timer.h"
 #include "lcd.h"
 #include "stm32l4xx_hal.h"
+#include "../calc.h"
 
 void System_Clock_Init(void);
 
 int main()
 {
+    char exp[] = "10*0.5";
+    char ans[20];
+    int res;
+
     System_Clock_Init();
     timer_init();
     Red_LED_Init();
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_SET);
     lcd_init();
-    
-    lcd_print("Hello");
+   
+    lcd_print(exp);
+    infix_to_postfix(exp, ans);
+    res = eval_postfix(ans);
+    sprintf(ans, "%d", res);
     lcd_command(LCD_SET_RAM | LCD_LINE2);
-    lcd_print("22");
+    lcd_print(ans);
     while (1);
 
 }

@@ -16,7 +16,7 @@ struct stack *init_stack(uint32_t size)
         printf("Error! Not enough memory!\n");
         return NULL;
     }
-
+    
     st->maxsize = size;
     st->top = -1;
 

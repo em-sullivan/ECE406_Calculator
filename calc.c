@@ -88,7 +88,9 @@ float express(char op, float n1, float n2)
         case '^':
             ans = (int)n1 ^ (int)n2;
             break;
-        default: break;
+        default:
+            ans = 0; 
+            break;
     }
 
     return ans;      
