@@ -57,13 +57,15 @@
 #define SDA_PIN GPIO_PIN_7
 
 void lcd_init_i2c_pins();
+void lcd_init_dma();
 void lcd_init_i2c();
 void lcd_init();
 
 void write_nibble(uint8_t byte);
+void write_byte(uint8_t byte, uint8_t cw);
 void lcd_command(uint8_t byte);
 void lcd_write_char(uint8_t c);
-void lcd_print(char *string);
+void lcd_print(char *string, ...);
 
 
 #endif // LCD_H

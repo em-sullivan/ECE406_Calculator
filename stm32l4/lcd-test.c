@@ -16,7 +16,7 @@ void System_Clock_Init(void);
 
 int main()
 {
-    char exp[] = "10*0.5";
+    char exp[] = "26/2+3-(29*2)";
     char ans[20];
     int res;
 
@@ -26,12 +26,12 @@ int main()
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_SET);
     lcd_init();
    
-    lcd_print(exp);
+    lcd_print("%s", exp);
     infix_to_postfix(exp, ans);
     res = eval_postfix(ans);
     sprintf(ans, "%d", res);
     lcd_command(LCD_SET_RAM | LCD_LINE2);
-    lcd_print(ans);
+    lcd_print("%d", res);
     while (1);
 
 }
@@ -39,6 +39,7 @@ void System_Clock_Init(void)
 {
     RCC_OscInitTypeDef Osc = {0};
     RCC_ClkInitTypeDef Clk = {0};
+    RCC_PeriphCLKInitTypeDef Per = {0};
 
     HAL_RCC_DeInit();
     /* Initialize Oscilation */
@@ -51,7 +52,8 @@ void System_Clock_Init(void)
     }
 
     /* Initializse Clock */
-    Clk.ClockType = RCC_CLOCKTYPE_SYSCLK;
+    Clk.ClockType = RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | 
+                    RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2 ;
     Clk.SYSCLKSource = RCC_SYSCLKSOURCE_MSI;
     Clk.AHBCLKDivider = RCC_SYSCLK_DIV1; // SYSCLK not divided
     Clk.APB1CLKDivider = RCC_HCLK_DIV1;
@@ -60,4 +62,10 @@ void System_Clock_Init(void)
         // Initilizatione error, wait forever
         while (1);
     }
+    Per.PeriphClockSelection = RCC_PERIPHCLK_I2C1;
+    Per.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
+    if (HAL_RCCEx_PeriphCLKConfig(&Per) != HAL_OK) {
+        while (1);
+    }
+
 }
