@@ -31,14 +31,19 @@ float eval_postfix(char *exp)
     strcpy(temp, "");
 
     while (*cp != '\0') {
-        // Checks if value in string is a number
+        // Checks if value in string is a number, adds
+        // digit to temp string
         if (isdigit(*cp) || *cp == '.') {
             strncat(temp, cp, 1);
-        // Stores number into stack
+        
+        // Stores number into stack 
         } else if (*cp == ',') {
             num1 = strtof(temp, NULL);
             if (negative)
                 num1 *= -1.0;
+            
+            // Push number to stack, reset temp string
+            // and negative val
             push(st, num1);
             strcpy(temp, "");
             negative = 0;
@@ -167,11 +172,13 @@ int infix_to_postfix(char *inexp, char *postexp)
         }
     }
 
+    // Pop remaing chars on the stack
     while (!stack_isempty(st)) {
         pop(st, &noth);
         *postfixp = noth;
         postfixp++;
     }
+    
     *postfixp = '\0';
     free_stack(st);
     return 0;
@@ -196,45 +203,6 @@ void print_binary(int val)
     printf("\n");
 }
 
-void print_hex(int val)
-{
-    int i, j;
-    int leading_zero = 0;
-    char hex_table[] = {'0', '1', '2', '3', '4', '5', '6', '7',
-                        '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-    unsigned int mask = 0xF;
-
-    printf("0x");
-    for (i = 0; i < 8; i++) {
-        j = (val >> (28 - 4 * i) & mask);
-        if (leading_zero || j != 0) {
-            printf("%c", hex_table[j]);
-            leading_zero = 1;
-        }
-    }
-    printf("\n");
-}
-
-void print_oct(int val)
-{
-    int i, j;
-    int leading_zero = 0;
-    char oct_table[] = {'0', '1', '2', '3', '4', '5', '6', '7'};
-    unsigned int mask = 0x7;
-
-    /*
-     * NEED TO FIX NEGATIVE NUMBERS
-     */
-    for (i = 0; i < 11; i++) {
-        j = (val >> (30 - 3 * i) & mask);
-        if (leading_zero || j != 0) {
-            printf("%c", oct_table[j]);
-            leading_zero = 1;
-        } 
-    }
-    printf("\n");
-}
-
 void print_mode(int val, int mode)
 {
     switch(mode) {
@@ -242,12 +210,10 @@ void print_mode(int val, int mode)
             print_binary(val);
             break;
         case OCT:
-            //printf("%o\n", val);
-            print_oct(val);
+            printf("%o\n", val);
             break;
         case HEX:
-            //printf("%X\n", val);
-            print_hex(val);
+            printf("%X\n", val);
             break;
         case DEC:
         default:

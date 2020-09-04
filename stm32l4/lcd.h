@@ -51,7 +51,6 @@
 #define LCD_SET_RAM         0x80
 #define LCD_LINE2           0x40
 
-
 /* i2c pins */
 #define SCL_PIN GPIO_PIN_6
 #define SDA_PIN GPIO_PIN_7
@@ -66,6 +65,8 @@ void write_byte(uint8_t byte, uint8_t cw);
 void lcd_command(uint8_t byte);
 void lcd_write_char(uint8_t c);
 void lcd_print(char *string, ...);
+void lcd_print_int_mode(int val, uint8_t mode);
+void lcd_print_int_binary(int val);
 
 
 #endif // LCD_H

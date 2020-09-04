@@ -16,7 +16,7 @@ void System_Clock_Init(void);
 
 int main()
 {
-    char exp[] = "26/2+3-(29*2)";
+    char exp[] = "1+2-3+9"; // Test expression
     char ans[20];
     int res;
 
@@ -26,14 +26,13 @@ int main()
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_SET);
     lcd_init();
    
-    lcd_print("%s", exp);
-    infix_to_postfix(exp, ans);
-    res = eval_postfix(ans);
-    sprintf(ans, "%d", res);
+    lcd_print("%s", exp); // Print expression
+    infix_to_postfix(exp, ans); // Convert to postfix
+    res = eval_postfix(ans); // Final result
     lcd_command(LCD_SET_RAM | LCD_LINE2);
-    lcd_print("%d", res);
-    while (1);
+    lcd_print_int_mode(res, 2);
 
+    while (1);
 }
 void System_Clock_Init(void)
 {
@@ -67,5 +66,4 @@ void System_Clock_Init(void)
     if (HAL_RCCEx_PeriphCLKConfig(&Per) != HAL_OK) {
         while (1);
     }
-
 }

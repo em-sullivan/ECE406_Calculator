@@ -89,7 +89,7 @@ void lcd_init_i2c()
     // I2C configuration
     lcd_handler.Instance = I2C1;
     lcd_handler.Init.Timing = 0x20E06893;
-    //lcd_handler.Init.Timing = 0x2010091A;
+    //lcd_handler.Init.Timing =  0x10909CEC;
     lcd_handler.Init.OwnAddress1 = 0;
     lcd_handler.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
     lcd_handler.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED;
@@ -111,16 +111,18 @@ void lcd_init()
 {
     // Enable pins and I2C
     lcd_init_i2c_pins();
-    lcd_init_dma();
+    //lcd_init_dma();
     lcd_init_i2c();
+    
+    mdelay(50);
 
     // Enable 8-bit mode 3 times, then 4 bit mode
     lcd_command(0b00110000);
-    udelay(4100);
+    mdelay(5);
     lcd_command(0b00110000);
-    udelay(100);
+    mdelay(1);
     lcd_command(0b00110000);
-    udelay(4100);
+    mdelay(5);
     lcd_command(0b00100000);
 
     // 4-bit mode, 5b8 characters
@@ -168,6 +170,7 @@ void write_byte(uint8_t byte, uint8_t cw)
     buf[4] = buf[3];
     buf[5] = ((byte << 4) & 0xF0) | LCD_BL;
 
+    // Determines if writing character to screen
     if (cw != 0) {
         for (i = 0; i < 6; i++)
             buf[i] |= LCD_RS;
@@ -175,7 +178,7 @@ void write_byte(uint8_t byte, uint8_t cw)
 
     HAL_I2C_Master_Transmit(&lcd_handler, LCD_SLAVE << 1, buf, 6, 1000);
     //HAL_I2C_Master_Transmit_DMA(&lcd_handler, LCD_SLAVE << 1, buf, 6);
-    udelay(950);
+    mdelay(2);
 }
 
 void lcd_command(uint8_t byte)
@@ -198,6 +201,7 @@ void lcd_print(char *string, ...)
     va_list args;
     uint8_t i;
 
+    // Handles added arguments
     va_start(args, string);
     vsnprintf(new_string, sizeof(new_string), string, args);
     va_end(args);
@@ -205,4 +209,45 @@ void lcd_print(char *string, ...)
     // Print each character
     for (i = 0; i < strlen(new_string); i++)
         lcd_write_char(new_string[i]);
+}
+
+void lcd_print_int_mode(int val, uint8_t mode)
+{
+    switch(mode) {
+        case 0:
+            lcd_print("%o", val);
+            break;
+        case 1:
+            lcd_print("%X", val);
+            break;
+        case 2:
+            lcd_print_int_binary(val);
+            break;
+        default:
+            lcd_print("%d", val);
+    }
+}
+
+void lcd_print_int_binary(int val)
+{
+    uint8_t mask_shift;
+    int mask;
+    char binary_num[33];
+
+    mask = 0x80000000;
+
+    // Shifts through each bit and adds it to
+    // binary string
+    for (mask_shift = 0; mask_shift < 32; mask_shift++) {
+        if ((mask >> mask_shift) & val)
+            binary_num[mask_shift] = '1';
+        else
+            binary_num[mask_shift] = '0';
+    }
+
+    // Print full 32-bit number
+    lcd_command(LCD_CLEAR);
+    lcd_print("%s", binary_num);
+    lcd_command(LCD_SET_RAM | LCD_LINE2);
+    lcd_print("%s", &binary_num[16]);
 }
