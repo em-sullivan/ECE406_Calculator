@@ -8,7 +8,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include "stm32l4xx_hal.h"
-#include "lcd.h"
+#include "lcd-i2c.h"
 #include "timer.h"
 
 // I2C handler for LCD

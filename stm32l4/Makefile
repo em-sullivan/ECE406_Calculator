@@ -7,7 +7,10 @@
 
 TARGET= lcd-test
 
-OBJS  = lcd.o lcd-test.o timer.o leds_hal.o ../calc.o ../stack.o
+CORESRC = ../Core/Src/
+COREINC = ../Core/Inc/
+
+OBJS  = lcd-test.o $(CORESRC)lcd-i2c.o $(CORESRC)timer.o $(CORESRC)leds_hal.o $(CORESRC)calc.o $(CORESRC)stack.o
 INSTALLDIR = /usr/local/stmdev/
 ARCH = STM32L476xx
 
@@ -16,7 +19,7 @@ LD=arm-none-eabi-ld
 AS=arm-none-eabi-as
 OBJCOPY=arm-none-eabi-objcopy
 
-INCDIRS = -I$(INSTALLDIR)/include -I.
+INCDIRS = -I$(INSTALLDIR)/include -I$(COREINC)
 LIBDIRS = -L$(INSTALLDIR)/lib
 
 LIBS= -lece486_$(ARCH) -l$(ARCH) -lm

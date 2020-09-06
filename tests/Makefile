@@ -1,5 +1,7 @@
-OBJS = ../stack.o ../calc.o
-CFLAGS = -Wall -o2 -g -I ../
+CORESRC = ../Core/Src/
+COREINC = ../Core/Inc/
+OBJS = ${CORESRC}stack.o ${CORESRC}calc.o
+CFLAGS = -Wall -o2 -g -I ${COREINC}
 CC = gcc
 
 all: stacktest postfixtest intoposttest printtest

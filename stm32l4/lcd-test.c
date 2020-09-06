@@ -8,9 +8,9 @@
 #include <stdlib.h>
 #include "leds_hal.h"
 #include "timer.h"
-#include "lcd.h"
+#include "lcd-i2c.h"
 #include "stm32l4xx_hal.h"
-#include "../calc.h"
+#include "calc.h"
 
 void System_Clock_Init(void);
 
