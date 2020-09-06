@@ -111,7 +111,7 @@ void lcd_init()
 {
     // Enable pins and I2C
     lcd_init_i2c_pins();
-    //lcd_init_dma();
+    lcd_init_dma();
     lcd_init_i2c();
     
     mdelay(50);
@@ -176,9 +176,9 @@ void write_byte(uint8_t byte, uint8_t cw)
             buf[i] |= LCD_RS;
     }
 
-    HAL_I2C_Master_Transmit(&lcd_handler, LCD_SLAVE << 1, buf, 6, 1000);
-    //HAL_I2C_Master_Transmit_DMA(&lcd_handler, LCD_SLAVE << 1, buf, 6);
-    mdelay(2);
+    //HAL_I2C_Master_Transmit(&lcd_handler, LCD_SLAVE << 1, buf, 6, 1000);
+    HAL_I2C_Master_Transmit_DMA(&lcd_handler, LCD_SLAVE << 1, buf, 6);
+    mdelay(1);
 }
 
 void lcd_command(uint8_t byte)
@@ -206,7 +206,7 @@ void lcd_print(char *string, ...)
     vsnprintf(new_string, sizeof(new_string), string, args);
     va_end(args);
 
-    // Print each character
+    // Print each character (Max lenght is 16 chars)
     for (i = 0; i < strlen(new_string); i++)
         lcd_write_char(new_string[i]);
 }
@@ -231,23 +231,26 @@ void lcd_print_int_mode(int val, uint8_t mode)
 void lcd_print_int_binary(int val)
 {
     uint8_t mask_shift;
-    int mask;
     char binary_num[33];
-
-    mask = 0x80000000;
 
     // Shifts through each bit and adds it to
     // binary string
     for (mask_shift = 0; mask_shift < 32; mask_shift++) {
-        if ((mask >> mask_shift) & val)
+        if ((0x80000000U >> mask_shift) & val) {
             binary_num[mask_shift] = '1';
-        else
+        } else {
             binary_num[mask_shift] = '0';
+        }
     }
 
-    // Print full 32-bit number
-    lcd_command(LCD_CLEAR);
-    lcd_print("%s", binary_num);
-    lcd_command(LCD_SET_RAM | LCD_LINE2);
-    lcd_print("%s", &binary_num[16]);
+    if (val > 0) {
+        // Print Only lower 16-bits of number if it is small enough
+        lcd_print("%s", &binary_num[16]);
+    } else {
+        // Print full 32-bit number
+        lcd_command(LCD_CLEAR);
+        lcd_print("%s", binary_num);
+        lcd_command(LCD_SET_RAM | LCD_LINE2);
+        lcd_print("%s", &binary_num[16]);
+    }
 }
