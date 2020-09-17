@@ -24,7 +24,7 @@ void lcd_init_i2c_pins()
     i2c_pins.Pin = SDA_PIN | SCL_PIN;
     i2c_pins.Mode = GPIO_MODE_AF_OD;
     i2c_pins.Pull = GPIO_PULLUP;
-    i2c_pins.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    i2c_pins.Speed = GPIO_SPEED_FREQ_HIGH;
     i2c_pins.Alternate = GPIO_AF4_I2C1;
 
     // Enables GPIOB clock and pins
@@ -46,7 +46,7 @@ void lcd_init_dma()
     i2c_dma_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
     i2c_dma_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
     i2c_dma_tx.Init.Mode = DMA_NORMAL;
-    i2c_dma_tx.Init.Priority = DMA_PRIORITY_LOW;
+    i2c_dma_tx.Init.Priority = DMA_PRIORITY_HIGH;
     if (HAL_DMA_Init(&i2c_dma_tx) != HAL_OK) {
         while(1);
     }
@@ -63,7 +63,7 @@ void lcd_init_dma()
     i2c_dma_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
     i2c_dma_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
     i2c_dma_rx.Init.Mode = DMA_NORMAL;
-    i2c_dma_rx.Init.Priority = DMA_PRIORITY_LOW;
+    i2c_dma_rx.Init.Priority = DMA_PRIORITY_HIGH;
     if (HAL_DMA_Init(&i2c_dma_rx) != HAL_OK) {
         while (1);
     }
@@ -111,7 +111,7 @@ void lcd_init()
 {
     // Enable pins and I2C
     lcd_init_i2c_pins();
-    lcd_init_dma();
+    // lcd_init_dma();
     lcd_init_i2c();
     
     mdelay(50);
@@ -176,8 +176,8 @@ void write_byte(uint8_t byte, uint8_t cw)
             buf[i] |= LCD_RS;
     }
 
-    //HAL_I2C_Master_Transmit(&lcd_handler, LCD_SLAVE << 1, buf, 6, 1000);
-    HAL_I2C_Master_Transmit_DMA(&lcd_handler, LCD_SLAVE << 1, buf, 6);
+    HAL_I2C_Master_Transmit(&lcd_handler, LCD_SLAVE << 1, buf, 6, 1000);
+    // HAL_I2C_Master_Transmit_DMA(&lcd_handler, LCD_SLAVE << 1, buf, 6);
     mdelay(1);
 }
 
@@ -247,7 +247,7 @@ void lcd_print_int_binary(int val)
         // Print Only lower 16-bits of number if it is small enough
         lcd_print("%s", &binary_num[16]);
     } else {
-        // Print full 32-bit number
+        // Print full 32-bit number: Uses both rows of LCD screen
         lcd_command(LCD_CLEAR);
         lcd_print("%s", binary_num);
         lcd_command(LCD_SET_RAM | LCD_LINE2);

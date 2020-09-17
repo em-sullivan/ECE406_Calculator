@@ -5,7 +5,7 @@
 
 int main(int argc, char *argv[])
 {
-    char exp[40];;
+    char exp[40];
     char ans[40];
     int result;
     int mode;
