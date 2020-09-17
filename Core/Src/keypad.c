@@ -55,9 +55,30 @@ uint8_t keypad_scan()
 
     // Read to see if and input is high
     if ((GPIOA->IDR & (GPIO_PIN_1 | GPIO_PIN_2)) == (GPIO_PIN_1 | GPIO_PIN_2))
-        return 5;
+        return 255;
 
-    return 0;
+    // Short delay before setting rows
+    udelay(50);
+    
+    // Cycles through the rows
+    for (row = 0; row < KEYPAD_ROW_SIZE; row++) {
+        
+        // Sets current row to 0, all other rows are high
+        GPIOA->ODR |= (keypad_rows[0] | keypad_rows[1]);
+        GPIOA->ODR &= ~(keypad_rows[row]);
+        udelay(50);
 
-    udelay(5);
+        // Checks if an input is being read (if and col pin is low)
+        if ((GPIOA->IDR & (keypad_cols[0] | keypad_cols[1])) != (keypad_cols[0] | keypad_cols[1])) {
+            
+            // Finds which column it is
+            for (col = 0; col < KEYPAD_COL_SIZE; col++) {
+                if ((GPIOA->IDR & keypad_cols[col]) == 0) {
+                    return 2 * row + col;
+                }
+            }
+        } 
+    }
+
+    return 255;
 }
