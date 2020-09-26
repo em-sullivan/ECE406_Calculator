@@ -1,0 +1,4 @@
+Calculator/Debug
+*.o
+*.bin
+*.elf
