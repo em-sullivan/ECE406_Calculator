@@ -17,5 +17,6 @@
 
 void init_keypad_pins();
 uint8_t keypad_scan();
+uint8_t map_key(uint8_t key);
 
 #endif // KEYPAD_H

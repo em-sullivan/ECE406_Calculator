@@ -59,10 +59,10 @@ int main(void)
 
         // Print it to screen
         key = keypad_scan();
-        lcd_print("%d", key);
+
+        if (key < 4)
+        	lcd_print("%c", map_key(key));
 	}
-
-
 }
 
 /*

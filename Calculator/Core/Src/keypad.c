@@ -82,3 +82,14 @@ uint8_t keypad_scan()
 
     return 255;
 }
+
+uint8_t map_key(uint8_t key)
+{
+	uint8_t mapped_keys[4] = {'1', '2',
+							  '3', '4'};
+	if (key > 4)
+		return 255;
+	else
+		return mapped_keys[key];
+}
+
