@@ -53,6 +53,8 @@ float eval_postfix(char *exp)
             negative ^= 1;
         // Performs operation and stores back into stack
         } else {
+            // Pops the last two numbers off the stack, performs
+        	// math operation, then returns answer to stack
             pop(st, &num1);
             pop(st, &num2);
             num3 = express(*cp, num1, num2);
@@ -61,7 +63,7 @@ float eval_postfix(char *exp)
         cp++;
     }
 
-    // Final result
+    // Final result is popped off the stack
     pop(st, &num1);
     free_stack(st);
     return num1;
@@ -138,9 +140,12 @@ int infix_to_postfix(char *inexp, char *postexp)
             *postfixp = *infixp;
             postfixp++;
         
-        // Handles values in parentheses
+        // Push parenthesis to stack
         } else if (*infixp == '(') {
             push(st, *infixp);
+
+        // At end of parenthesis, pop parenthesis values off the stack
+        // until you get to a (
         } else if (*infixp == ')') {
             while (!stack_isempty(st) && peek(st) != '(') {
                 pop(st, &noth);
@@ -148,6 +153,7 @@ int infix_to_postfix(char *inexp, char *postexp)
                 postfixp++;
             }
 
+            // Error checking if a ( was never reached
             if(!stack_isempty(st) && peek(st) != '(') {
                 return 2;
             } else {
@@ -155,6 +161,7 @@ int infix_to_postfix(char *inexp, char *postexp)
             }
 
         } else {
+            // Determines the order of operators (+, -, etc.)
             while(!stack_isempty(st) && precd(*infixp) <= precd(peek(st))) {
                 pop(st, &noth);
                 *postfixp = noth;
@@ -172,7 +179,7 @@ int infix_to_postfix(char *inexp, char *postexp)
         }
     }
 
-    // Pop remaing chars on the stack
+    // Pop remaning chars on the stack
     while (!stack_isempty(st)) {
         pop(st, &noth);
         *postfixp = noth;
@@ -205,6 +212,7 @@ void print_binary(int val)
 
 void print_mode(int val, int mode)
 {
+    // Prints number in specified mode
     switch(mode) {
             case BIN:
             print_binary(val);
