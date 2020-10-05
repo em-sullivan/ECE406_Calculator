@@ -144,7 +144,7 @@ int infix_to_postfix(char *inexp, char *postexp)
         } else if (*infixp == '(') {
             push(st, *infixp);
 
-        // At end of parenthesis, pop parenthesis values off the stack
+        // At end of parenthesis, pop values off the stack
         // until you get to a (
         } else if (*infixp == ')') {
             while (!stack_isempty(st) && peek(st) != '(') {

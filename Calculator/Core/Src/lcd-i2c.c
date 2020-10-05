@@ -96,11 +96,11 @@ void lcd_init_i2c()
     lcd_handler.Init.OwnAddress2 = 0;
     lcd_handler.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
     lcd_handler.Init.GeneralCallMode = I2C_GENERALCALL_DISABLED;
-    lcd_handler.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED;
+    lcd_handler.Init.NoStretchMode = I2C_NOSTRETCH_ENABLED;
 
     __HAL_RCC_I2C1_CLK_ENABLE();
     HAL_I2C_Init(&lcd_handler);
-    if (HAL_I2C_IsDeviceReady(&lcd_handler, 0x3F << 1, 3, 1000) != HAL_OK)
+    if (HAL_I2C_IsDeviceReady(&lcd_handler, LCD_SLAVE << 1, 10, 10000) != HAL_OK)
         while (1);
     
     HAL_I2CEx_AnalogFilter_Config(&lcd_handler, I2C_ANALOGFILTER_ENABLED);

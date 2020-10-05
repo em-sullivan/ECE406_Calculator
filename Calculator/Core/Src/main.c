@@ -54,6 +54,8 @@ int main(void)
     // Init keypad
     init_keypad_pins();
 
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_SET);
+
     while (1) {
         // Wait for key to be pressed
         while(keypad_scan() != 255);
@@ -61,8 +63,8 @@ int main(void)
 
         // Print it to screen
         key = keypad_scan();
-        if (key < 4)
-            lcd_print("%c", map_key(key));
+        if (key != 255)
+   			lcd_print("%c", map_key(key));
     }
 }
 

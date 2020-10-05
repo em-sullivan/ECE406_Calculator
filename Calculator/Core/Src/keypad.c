@@ -10,10 +10,10 @@
 #include "timer.h"
 
 /* GPIO Pins for rows  (GPIOC)*/
-uint16_t keypad_rows[] = {GPIO_PIN_0, GPIO_PIN_1};
+uint16_t keypad_rows[] = {GPIO_PIN_4, GPIO_PIN_8, GPIO_PIN_6, GPIO_PIN_7};
 
 /* GPIO Pins for cols (GPIOC) */
-uint16_t keypad_cols[] = {GPIO_PIN_2, GPIO_PIN_3};
+uint16_t keypad_cols[] = {GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_3};
 
 void init_keypad_pins()
 {
@@ -51,10 +51,10 @@ uint8_t keypad_scan()
     uint8_t row, col;
 
     // Set output rows to 0
-    GPIOC->ODR &= ~(keypad_rows[0] | keypad_rows[1]);
+    GPIOC->ODR &= ~(keypad_rows[0] | keypad_rows[1] | keypad_rows[2] | keypad_rows[3]);
 
     // Read to see if and input is high
-    if ((GPIOC->IDR & (keypad_cols[0] | keypad_cols[1])) == (keypad_cols[0] | keypad_cols[1]))
+    if ((GPIOC->IDR & (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3])) == (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3]))
         return 255;
 
     // Short delay before setting rows
@@ -64,17 +64,17 @@ uint8_t keypad_scan()
     for (row = 0; row < KEYPAD_ROW_SIZE; row++) {
         
         // Sets current row to 0, all other rows are high
-        GPIOC->ODR |= (keypad_rows[0] | keypad_rows[1]);
+        GPIOC->ODR |= (keypad_rows[0] | keypad_rows[1] | keypad_rows[2] | keypad_rows[3]);
         GPIOC->ODR &= ~(keypad_rows[row]);
         udelay(40);
 
         // Checks if an input is being read (if and col pin is low)
-        if ((GPIOC->IDR & (keypad_cols[0] | keypad_cols[1])) != (keypad_cols[0] | keypad_cols[1])) {
+        if ((GPIOC->IDR & (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3])) != (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3])) {
             
             // Finds which column it is
             for (col = 0; col < KEYPAD_COL_SIZE; col++) {
                 if ((GPIOC->IDR & keypad_cols[col]) == 0) {
-                    return 2 * row + col;
+                    return 4 * row + col;
                 }
             }
         } 
@@ -85,9 +85,11 @@ uint8_t keypad_scan()
 
 uint8_t map_key(uint8_t key)
 {
-	uint8_t mapped_keys[4] = {'1', '2',
-							  '3', '4'};
-	if (key > 4)
+	uint8_t mapped_keys[16] = {'1', '2', '3', '+',
+                              '4', '5', '6', '-',
+	                          '7', '8', '9', '*',
+	                          '.', '0', '%', '/'};
+	if (key > 15)
 		return 255;
 	else
 		return mapped_keys[key];
