@@ -100,7 +100,7 @@ void lcd_init_i2c()
 
     __HAL_RCC_I2C1_CLK_ENABLE();
     HAL_I2C_Init(&lcd_handler);
-    if (HAL_I2C_IsDeviceReady(&lcd_handler, LCD_SLAVE << 1, 10, 10000) != HAL_OK)
+    if (HAL_I2C_IsDeviceReady(&lcd_handler, LCD_SLAVE, 10, 1000) != HAL_OK)
         while (1);
     
     HAL_I2CEx_AnalogFilter_Config(&lcd_handler, I2C_ANALOGFILTER_ENABLED);
@@ -159,10 +159,11 @@ void write_byte(uint8_t byte, uint8_t cw)
     // Determines if writing character to screen
     if (cw != 0) {
         for (i = 0; i < 6; i++)
+            // Sets bit for writing character data
             buf[i] |= LCD_RS;
     }
 
-    HAL_I2C_Master_Transmit(&lcd_handler, LCD_SLAVE << 1, buf, 6, 1000);
+    HAL_I2C_Master_Transmit(&lcd_handler, LCD_SLAVE, buf, 6, 1000);
     //HAL_I2C_Master_Transmit_DMA(&lcd_handler, LCD_SLAVE << 1, buf, 6);
     mdelay(2);
 }
@@ -195,6 +196,19 @@ void lcd_print(char *string, ...)
     // Print each character (Max lenght is 16 chars)
     for (i = 0; i < strlen(new_string); i++)
         lcd_write_char(new_string[i]);
+}
+
+void lcd_del()
+{
+	// Shift cursor back one
+	lcd_command(LCD_SHIFT | LCD_LSHIFT);
+
+	// Write blank char
+	lcd_write_char(' ');
+
+	// Shift cursor again so its in the spot of the
+	// deleted char
+	lcd_command(LCD_SHIFT | LCD_LSHIFT);
 }
 
 void lcd_print_int_mode(int val, uint8_t mode)

@@ -9,7 +9,7 @@
 #include <stdint.h>
 
 /* Slave Address */
-#define LCD_SLAVE           0x3F
+#define LCD_SLAVE           0x3F << 1
 
 /* Bits */
 #define LCD_RS              0x01
@@ -103,6 +103,11 @@ void lcd_write_char(uint8_t c);
  * line the cursor is currently on
  */
 void lcd_print(char *string, ...);
+
+/*
+ * Deletes the char that the LCD previously printed
+ */
+void lcd_del();
 
 /*
  * Print integer val in different modes. Modes are:

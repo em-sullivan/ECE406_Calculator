@@ -70,7 +70,7 @@ int main(void)
             	lcd_command(LCD_CLEAR);
             	break;
             case '_':
-            	lcd_command(LCD_SET_RAM | LCD_LINE2);
+            	lcd_del();
             case 255:
             	break;
             default:
