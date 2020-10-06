@@ -54,6 +54,7 @@ int main(void)
     // Init keypad
     init_keypad_pins();
 
+    // Test LED that turns on when everything is set up correctly
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_SET);
 
     while (1) {
@@ -61,16 +62,27 @@ int main(void)
         while(keypad_scan() != 255);
         while(keypad_scan() == 255);
 
-        // Print it to screen
-        key = keypad_scan();
-        if (key != 255)
-   			lcd_print("%c", map_key(key));
+        // Scan key
+        key = map_key(keypad_scan());
+
+        switch(key) {
+            case '#':
+            	lcd_command(LCD_CLEAR);
+            	break;
+            case '_':
+            	lcd_command(LCD_SET_RAM | LCD_LINE2);
+            case 255:
+            	break;
+            default:
+            	lcd_write_char(key);
+
+        }
     }
 }
 
 /*
  * Initialize System Clock
- * (Need to work on error handeling for this)
+ * (Need to work on error handling for this)
  */
 void system_clock_init(void)
 {

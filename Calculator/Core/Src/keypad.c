@@ -10,7 +10,7 @@
 #include "timer.h"
 
 /* GPIO Pins for rows  (GPIOC)*/
-uint16_t keypad_rows[] = {GPIO_PIN_4, GPIO_PIN_8, GPIO_PIN_6, GPIO_PIN_7};
+uint16_t keypad_rows[] = {GPIO_PIN_9, GPIO_PIN_4, GPIO_PIN_8, GPIO_PIN_6, GPIO_PIN_7};
 
 /* GPIO Pins for cols (GPIOC) */
 uint16_t keypad_cols[] = {GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_3};
@@ -51,7 +51,7 @@ uint8_t keypad_scan()
     uint8_t row, col;
 
     // Set output rows to 0
-    GPIOC->ODR &= ~(keypad_rows[0] | keypad_rows[1] | keypad_rows[2] | keypad_rows[3]);
+    GPIOC->ODR &= ~(keypad_rows[0] | keypad_rows[1] | keypad_rows[2] | keypad_rows[3] | keypad_rows[4]);
 
     // Read to see if and input is high
     if ((GPIOC->IDR & (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3])) == (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3]))
@@ -64,7 +64,7 @@ uint8_t keypad_scan()
     for (row = 0; row < KEYPAD_ROW_SIZE; row++) {
         
         // Sets current row to 0, all other rows are high
-        GPIOC->ODR |= (keypad_rows[0] | keypad_rows[1] | keypad_rows[2] | keypad_rows[3]);
+        GPIOC->ODR |= (keypad_rows[0] | keypad_rows[1] | keypad_rows[2] | keypad_rows[3] | keypad_rows[4]);
         GPIOC->ODR &= ~(keypad_rows[row]);
         udelay(40);
 
@@ -85,13 +85,19 @@ uint8_t keypad_scan()
 
 uint8_t map_key(uint8_t key)
 {
-	uint8_t mapped_keys[16] = {'1', '2', '3', '+',
-                              '4', '5', '6', '-',
-	                          '7', '8', '9', '*',
-	                          '.', '0', '%', '/'};
-	if (key > 15)
-		return 255;
-	else
-		return mapped_keys[key];
+    // Map of keys for keypad
+	// NOTE: Not final key map, just for testing purposes
+    uint8_t mapped_keys[20] = {'&', '|', '#', '_',
+    		                   '1', '2', '3', '+',
+                               '4', '5', '6', '-',
+							   '7', '8', '9', '*',
+							   '.', '0', '%', '/'};
+
+    // If input key is out of range, return max value
+    // else return mapped key
+    if (key > 20)
+        return 255;
+     else
+        return mapped_keys[key];
 }
 
