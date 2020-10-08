@@ -165,7 +165,7 @@ void write_byte(uint8_t byte, uint8_t cw)
 
     HAL_I2C_Master_Transmit(&lcd_handler, LCD_SLAVE, buf, 6, 1000);
     //HAL_I2C_Master_Transmit_DMA(&lcd_handler, LCD_SLAVE << 1, buf, 6);
-    mdelay(2);
+    mdelay(10);
 }
 
 void lcd_command(uint8_t byte)

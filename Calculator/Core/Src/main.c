@@ -21,12 +21,11 @@
 #include "main.h"
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 #include "timer.h"
 #include "lcd-i2c.h"
 #include "keypad.h"
 #include "calc.h"
-
-I2C_HandleTypeDef hi2c1;
 
 /* Private function prototypes -----------------------------------------------*/
 void system_clock_init(void);
@@ -38,6 +37,13 @@ void LED_Init(void);
 int main(void)
 {
     uint8_t key;
+    char exp_buffer[16];
+    char post_fix[20];
+    char *exp_p;
+    int res;
+
+    // Set expression pointer to buffer
+    exp_p = exp_buffer;
 
     // Init System Clock
     system_clock_init();
@@ -67,15 +73,42 @@ int main(void)
 
         switch(key) {
             case '#':
+            	// Clear screen
             	lcd_command(LCD_CLEAR);
+
+            	// Clear expression buffer
+            	memset(exp_buffer, 0, sizeof(exp_buffer));
+
+            	// Set expression pointer back to buffer
+            	exp_p = exp_buffer;
             	break;
             case '_':
+            	// Delete char from screen and buffer
             	lcd_del();
+            	*exp_p = 0;
+            	exp_p--;
+            	break;
+
+            case '&':
+            	// Calculate expression and print answer on next line
+            	infix_to_postfix(exp_buffer, post_fix);
+            	res = eval_postfix(post_fix);
+            	lcd_command(LCD_SET_RAM | LCD_LINE2);
+            	lcd_print("%d", res);
+
             case 255:
             	break;
             default:
-            	lcd_write_char(key);
+            	// Checks if expression if less then 16 chars
+            	if (exp_p - exp_buffer < 16) {
+            		// Write char to screen, save it to expression buffer
+            	    lcd_write_char(key);
+            	    *exp_p = key;
 
+            	    // Move to next char of buffer
+            	    exp_p++;
+            	    *exp_p = '\0';
+            	}
         }
     }
 }
