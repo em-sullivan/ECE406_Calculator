@@ -72,7 +72,7 @@ int main(void)
         key = map_key(keypad_scan());
 
         switch(key) {
-            case '#':
+            case 'c':
             	// Clear screen
             	lcd_command(LCD_CLEAR);
 
@@ -82,14 +82,14 @@ int main(void)
             	// Set expression pointer back to buffer
             	exp_p = exp_buffer;
             	break;
-            case '_':
+            case 'd':
             	// Delete char from screen and buffer
             	lcd_del();
             	*exp_p = 0;
             	exp_p--;
             	break;
 
-            case '&':
+            case '=':
             	// Calculate expression and print answer on next line
             	infix_to_postfix(exp_buffer, post_fix);
             	res = eval_postfix(post_fix);
@@ -107,6 +107,7 @@ int main(void)
 
             	    // Move to next char of buffer
             	    exp_p++;
+            	    // Set null character to end (current) end of buffer
             	    *exp_p = '\0';
             	}
         }

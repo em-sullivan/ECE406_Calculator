@@ -9,7 +9,7 @@
 #include <stdint.h>
 
 /* Slave Address */
-#define LCD_SLAVE           0x3F << 1
+#define LCD_SLAVE           0x3E << 1
 
 /* Bits */
 #define LCD_RS              0x01

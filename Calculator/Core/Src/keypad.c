@@ -87,11 +87,11 @@ uint8_t map_key(uint8_t key)
 {
     // Map of keys for keypad
 	// NOTE: Not final key map, just for testing purposes
-    uint8_t mapped_keys[20] = {'&', '|', '#', '_',
+    uint8_t mapped_keys[20] = {'s', 'd', 'c', '/',
     		                   '1', '2', '3', '+',
                                '4', '5', '6', '-',
 							   '7', '8', '9', '*',
-							   '.', '0', '%', '/'};
+							   '.', '0', '_', '='};
 
     // If input key is out of range, return max value
     // else return mapped key
