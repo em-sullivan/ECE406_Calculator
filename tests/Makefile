@@ -21,5 +21,5 @@ printtest: ${OBJS} printtest.o
 clean:
 	rm -f  ${OBJS} *.o stacktest postfixtest intoposttest printtest *core
 
-stack.o: stack.h
-calc.o: calc.h
+# stack.o: stack.h
+# calc.o: calc.h

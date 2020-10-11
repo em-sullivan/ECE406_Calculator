@@ -24,7 +24,7 @@ int main (int argc, char *argv[])
     printf("%f\n", peek(st));
     stackSize = stack_size(st);
     for (i = 0; i < stackSize; i++) {
-        pop(st, &popval);
+        popval = pop(st);
         printf("%f\n", popval);
     }
 

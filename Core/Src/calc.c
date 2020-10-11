@@ -53,8 +53,8 @@ float eval_postfix(char *exp)
             negative ^= 1;
         // Performs operation and stores back into stack
         } else {
-            pop(st, &num1);
-            pop(st, &num2);
+            num1 = pop(st);
+            num2 = pop(st);
             num3 = express(*cp, num1, num2);
             push(st, num3);
         }
@@ -62,7 +62,7 @@ float eval_postfix(char *exp)
     }
 
     // Final result
-    pop(st, &num1);
+    num1 = pop(st);
     free_stack(st);
     return num1;
 }
@@ -121,7 +121,6 @@ int infix_to_postfix(char *inexp, char *postexp)
     struct stack *st;
     char *infixp;
     char *postfixp;
-    float noth;
     
     st = init_stack(MAXSTACK);
     if (st == NULL) {
@@ -143,21 +142,19 @@ int infix_to_postfix(char *inexp, char *postexp)
             push(st, *infixp);
         } else if (*infixp == ')') {
             while (!stack_isempty(st) && peek(st) != '(') {
-                pop(st, &noth);
-                *postfixp = noth;
+                *postfixp = pop(st);
                 postfixp++;
             }
 
             if(!stack_isempty(st) && peek(st) != '(') {
                 return 2;
             } else {
-                pop(st, &noth);
+                pop(st);
             }
 
         } else {
             while(!stack_isempty(st) && precd(*infixp) <= precd(peek(st))) {
-                pop(st, &noth);
-                *postfixp = noth;
+                *postfixp = pop(st);
                 postfixp++;
             }
             push(st, *infixp);
@@ -174,8 +171,7 @@ int infix_to_postfix(char *inexp, char *postexp)
 
     // Pop remaing chars on the stack
     while (!stack_isempty(st)) {
-        pop(st, &noth);
-        *postfixp = noth;
+        *postfixp = pop(st);
         postfixp++;
     }
     
@@ -184,6 +180,11 @@ int infix_to_postfix(char *inexp, char *postexp)
     return 0;
 }
 
+/*
+ * These functions will not be used in the final
+ * version of the project, they are here for
+ * testing purposes
+ */
 void print_binary(int val)
 {
     int i;
