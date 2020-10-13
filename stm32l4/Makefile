@@ -4,7 +4,7 @@
 
 # NOTE: Only using this makefile temporarly to test
 # some of the software written
-TARGET = keypad-test
+TARGET = lcd-test
 
 CORESRC = ../Core/Src/
 COREINC = ../Core/Inc/

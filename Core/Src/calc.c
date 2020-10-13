@@ -53,6 +53,8 @@ float eval_postfix(char *exp)
             negative ^= 1;
         // Performs operation and stores back into stack
         } else {
+            // Pops the last two numbers off the stack, perfrorms
+            // math operation, then returns answer to stack
             num1 = pop(st);
             num2 = pop(st);
             num3 = express(*cp, num1, num2);
@@ -104,12 +106,18 @@ float express(char op, float n1, float n2)
 int precd(char op)
 {
     switch(op) {
+        case '&':
+            return 1;
+        case '^':
+            return 2;
+        case '|':
+            return 3;
         case '+':
         case '-':
-            return 1;
+            return 4;
         case '*':
         case '/':
-            return 2;
+            return 5;
         default: break;
     }
     
@@ -137,15 +145,19 @@ int infix_to_postfix(char *inexp, char *postexp)
             *postfixp = *infixp;
             postfixp++;
         
-        // Handles values in parentheses
+        // Pushes parenthesis to stack
         } else if (*infixp == '(') {
             push(st, *infixp);
+
+        // At end of parenthesis, pop values off stack
+        // unitl a ( appears
         } else if (*infixp == ')') {
             while (!stack_isempty(st) && peek(st) != '(') {
                 *postfixp = pop(st);
                 postfixp++;
             }
 
+            // Checking if a ( was never reached
             if(!stack_isempty(st) && peek(st) != '(') {
                 return 2;
             } else {
@@ -153,6 +165,7 @@ int infix_to_postfix(char *inexp, char *postexp)
             }
 
         } else {
+            // Determines the order of operators (_, -, etc.)
             while(!stack_isempty(st) && precd(*infixp) <= precd(peek(st))) {
                 *postfixp = pop(st);
                 postfixp++;
