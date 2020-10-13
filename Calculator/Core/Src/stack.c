@@ -59,20 +59,20 @@ int8_t push(struct stack *st, float val)
     return 0;
 }
 
-int8_t pop(struct stack *st, float *popval)
+float pop(struct stack *st)
 {
     // Checks if stack is empty
     if (stack_isempty(st)) {
         printf("Stack Underflow\n");
-        return -1;
+        return -1.0;
     }
 
-    *popval = st->data[st->top--];
-    return 0;
+    return st->data[st->top--];
 }
 
 float peek(struct stack *st)
 {
+    // Looks at the top of the stack
     return st->data[st->top];
 }
 
@@ -82,6 +82,8 @@ void free_stack(struct stack *st)
     if (st == NULL) {
         return;
     }
+    
+    // Free stack data
     if (st-> data != NULL)
         free(st->data);
     

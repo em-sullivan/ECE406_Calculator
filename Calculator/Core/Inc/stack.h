@@ -23,7 +23,7 @@ uint32_t stack_size(struct stack *st);
 int8_t stack_isempty(struct stack *st);
 int8_t stack_isfull(struct stack *st);
 int8_t push(struct stack *st, float val);
-int8_t pop(struct stack *st, float *popval);
+float pop(struct stack *st);
 float peek(struct stack *st);
 void free_stack(struct stack *st);
 

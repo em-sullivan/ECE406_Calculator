@@ -53,18 +53,18 @@ float eval_postfix(char *exp)
             negative ^= 1;
         // Performs operation and stores back into stack
         } else {
-            // Pops the last two numbers off the stack, performs
-        	// math operation, then returns answer to stack
-            pop(st, &num1);
-            pop(st, &num2);
+            // Pops the last two numbers off the stack, perfrorms
+            // math operation, then returns answer to stack
+            num1 = pop(st);
+            num2 = pop(st);
             num3 = express(*cp, num1, num2);
             push(st, num3);
         }
         cp++;
     }
 
-    // Final result is popped off the stack
-    pop(st, &num1);
+    // Final result
+    num1 = pop(st);
     free_stack(st);
     return num1;
 }
@@ -106,12 +106,18 @@ float express(char op, float n1, float n2)
 int precd(char op)
 {
     switch(op) {
+        case '&':
+            return 1;
+        case '^':
+            return 2;
+        case '|':
+            return 3;
         case '+':
         case '-':
-            return 1;
+            return 4;
         case '*':
         case '/':
-            return 2;
+            return 5;
         default: break;
     }
     
@@ -123,7 +129,6 @@ int infix_to_postfix(char *inexp, char *postexp)
     struct stack *st;
     char *infixp;
     char *postfixp;
-    float noth;
     
     st = init_stack(MAXSTACK);
     if (st == NULL) {
@@ -140,31 +145,29 @@ int infix_to_postfix(char *inexp, char *postexp)
             *postfixp = *infixp;
             postfixp++;
         
-        // Push parenthesis to stack
+        // Pushes parenthesis to stack
         } else if (*infixp == '(') {
             push(st, *infixp);
 
-        // At end of parenthesis, pop values off the stack
-        // until you get to a (
+        // At end of parenthesis, pop values off stack
+        // unitl a ( appears
         } else if (*infixp == ')') {
             while (!stack_isempty(st) && peek(st) != '(') {
-                pop(st, &noth);
-                *postfixp = noth;
+                *postfixp = pop(st);
                 postfixp++;
             }
 
-            // Error checking if a ( was never reached
+            // Checking if a ( was never reached
             if(!stack_isempty(st) && peek(st) != '(') {
                 return 2;
             } else {
-                pop(st, &noth);
+                pop(st);
             }
 
         } else {
-            // Determines the order of operators (+, -, etc.)
+            // Determines the order of operators (_, -, etc.)
             while(!stack_isempty(st) && precd(*infixp) <= precd(peek(st))) {
-                pop(st, &noth);
-                *postfixp = noth;
+                *postfixp = pop(st);
                 postfixp++;
             }
             push(st, *infixp);
@@ -179,10 +182,9 @@ int infix_to_postfix(char *inexp, char *postexp)
         }
     }
 
-    // Pop remaning chars on the stack
+    // Pop remaing chars on the stack
     while (!stack_isempty(st)) {
-        pop(st, &noth);
-        *postfixp = noth;
+        *postfixp = pop(st);
         postfixp++;
     }
     
@@ -191,6 +193,11 @@ int infix_to_postfix(char *inexp, char *postexp)
     return 0;
 }
 
+/*
+ * These functions will not be used in the final
+ * version of the project, they are here for
+ * testing purposes
+ */
 void print_binary(int val)
 {
     int i;
@@ -212,7 +219,6 @@ void print_binary(int val)
 
 void print_mode(int val, int mode)
 {
-    // Prints number in specified mode
     switch(mode) {
             case BIN:
             print_binary(val);
