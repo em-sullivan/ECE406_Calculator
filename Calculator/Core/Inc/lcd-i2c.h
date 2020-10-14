@@ -1,6 +1,11 @@
 /*
  * Eric Sullivan and Elizabeth Willard
  * Header for controlling LCD
+ *
+ * Note: This code is for the TC1602B01
+ * LCD screen with I2C interface.
+ * This was here for testing purposes, and
+ * will be removed for the final product.
  */
 
 #ifndef LCD_H
