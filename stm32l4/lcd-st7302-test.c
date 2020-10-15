@@ -21,13 +21,16 @@ int main()
     system_clock_init();
     Green_LED_Init();
     timer_init();
-    
+
+    // Init LCD  
     lcd_init();
 
+    // Have to write this in order to have two lines, 
+    // may have to change lcd_init
+    lcd_command(LCD_FUNC | LCD_FUNC_DL | LCD_FUNC_TWOL);
     lcd_print("The anser is %d", val);
-    lcd_del();
-    lcd_del();
-
+    lcd_set_cursor(3, 2);
+    lcd_print("Cursor check");
     HAL_GPIO_WritePin(GPIOE, GPIO_PIN_8, GPIO_PIN_SET);
     return 0;
 }

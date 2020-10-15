@@ -39,6 +39,10 @@
 #define LCD_FUNC_DH         0x04 // Double Height font
 #define LCD_FUNC_IS			0x01 // Instruction table Select
 
+/* LCD DDRAM */
+#define LCD_SET_DDRAM       0x80
+#define LCD_SET_DDRAM_LINE2 0x40
+
 /* Instruction Table 0 (IS = 0) */
 #define LCD_SHIFT           0x10
 #define LCD_LSHIFT          0x00 // Deafult shift
@@ -123,6 +127,11 @@ void lcd_shift(int8_t dir);
  * Deletes character where cursor is currently pointing
  */
 void lcd_del();
+
+/*
+ *
+ */
+void lcd_set_cursor(uint8_t x, uint8_t y);
 
 
 #endif // LCD_ST7032

@@ -135,10 +135,14 @@ void lcd_print(char *string, ...)
     va_list args;
     uint8_t i;
 
+    // Handles add arguments, used
+    // for printings values as dec, hex, oct
     va_start(args, string);
     vsnprintf(new_string, sizeof(new_string), string, args);
     va_end(args);
 
+    // Prints up to 16 chars or unitl null char
+    // is reached
     for(i = 0; i < 16; i++) {
         if (new_string[i] == 0)
             break;
@@ -149,6 +153,9 @@ void lcd_print(char *string, ...)
 void lcd_shift(int8_t dir)
 {
     uint8_t shift;
+
+    // IF positive, shift right
+    // else shift left
     if (dir > 0) {
         shift = LCD_SHIFT | LCD_RSHIFT;
     } else {
@@ -169,4 +176,22 @@ void lcd_del()
     // Shift cursor again so it is in the spot
     // of the deleted char
     lcd_shift(-1);
+}
+
+void lcd_set_cursor(uint8_t x, uint8_t y)
+{
+    uint8_t curs;
+    curs = LCD_SET_DDRAM;
+
+    // Checks if coords are out of range
+    if (x > 16)
+        return;
+    
+    // Puts cursor on second line
+    if (y > 0) {
+        curs |= LCD_SET_DDRAM_LINE2;
+    }
+
+    // Change DDRAM to put new position for cursor
+    lcd_command(curs + x);
 }
