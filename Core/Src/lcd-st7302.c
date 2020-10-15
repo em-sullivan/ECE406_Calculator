@@ -54,3 +54,27 @@ void lcd_init_i2c()
     // Enable Analog filter
     HAL_I2CEx_AnalogFilter_Config(&lcd_handler, I2C_ANALOGFILTER_ENABLED);
 }
+
+void lcd_command(uint8_t byte)
+{
+    uint8_t buf[2];
+
+    // Load buffer with command to send
+    buf[0] = 0;
+    buf[1] = byte;
+
+    // Transmit data
+    HAL_I2C_Master_Transmit(&lcd_handler, LCD_SLAVE, buf, 2, 1000);
+    mdelay(100);
+}
+
+void lcd_write_char(uint8_t c)
+{
+    uint8_t buf[2];
+
+    buf[0] = LCD_CONTROL_RS;
+    buf[1] = c;
+
+    HAL_I2C_Master_Transmit(&lcd_handler, LCD_SLAVE, buf, 2, 1000);
+    mdelay(100);
+}

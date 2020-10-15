@@ -51,7 +51,9 @@
 /* LCD Internal Oscillator */
 #define LCD_OSC_FREQ        0x10
 #define LCD_OSC_FREQ_BS     0x08 //BS = 1/4 bias, 0 = 1/5
-#define LCD_OSC_FREQ_F		0x07 // Adjust bits 0 - 2 for Freq
+#define LCD_OSC_FREQ_F2		0x04 // Adjust bits 0 - 2 for Freq
+#define LCD_OSC_FREQ_F1     0x02
+#define LCD_OSC_FREQ_F0
 
 /* LCD ICON Address */
 #define LCD_ICON_ADDR       0x40 // Lower 4 bits sets ICON address
@@ -70,6 +72,10 @@
 /* LCD Contrast Set */
 #define LCD_CONTRAST        0x70 // Set four lower bits for contrast
 
+/* Control Byte bits */
+#define LCD_CONTROL_CO      0x80
+#define LCD_CONTROL_RS      0x40
+
 /* I2C Pins */
 #define SCL_PIN             GPIO_PIN_6
 #define SDA_PIN             GPIO_PIN_7
@@ -83,6 +89,9 @@ void lcd_init_i2c_pins();
  * Init I2C1
  */
 void lcd_init_i2c();
+
+void lcd_command(uint8_t byte);
+void lcd_write_char(uint8_t c);
 
 
 #endif // LCD_ST7032
