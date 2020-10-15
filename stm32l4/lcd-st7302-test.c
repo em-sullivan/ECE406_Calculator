@@ -59,8 +59,7 @@ int main()
     lcd_command(LCD_CLEAR);
     lcd_command(LCD_HOME);
 
-    lcd_write_char('H');
-    lcd_write_char('E');
+    lcd_print("Hello World!");
 
     HAL_GPIO_WritePin(GPIOE, GPIO_PIN_8, GPIO_PIN_SET);
     return 0;

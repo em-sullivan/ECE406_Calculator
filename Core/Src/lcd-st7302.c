@@ -78,3 +78,14 @@ void lcd_write_char(uint8_t c)
     HAL_I2C_Master_Transmit(&lcd_handler, LCD_SLAVE, buf, 2, 1000);
     mdelay(1);
 }
+
+void lcd_print(char *string)
+{
+    uint8_t i;
+
+    for(i = 0; i < 16; i++) {
+        if (string[i] == 0)
+            break;
+        lcd_write_char(string[i]);
+    }
+}
