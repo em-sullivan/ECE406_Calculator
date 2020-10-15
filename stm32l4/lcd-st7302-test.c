@@ -38,11 +38,11 @@ int main()
     udelay(30);
 
     // Set contrast
-    lcd_command(LCD_CONTRAST | 0xF);
+    lcd_command(LCD_CONTRAST);
     udelay(30);
 
     // Power/ICON/Constrast control : Set ICON display on
-    lcd_command(LCD_ICON_SET | LCD_ICON_ION | 0x03);
+    lcd_command(LCD_ICON_SET | LCD_ICON_ION | LCD_ICON_BON | 0x01);
     udelay(30);
 
     // Set LCD Follower control
@@ -52,7 +52,6 @@ int main()
     mdelay(300);
 
     // Clear IS 
-    lcd_command(LCD_FUNC);
     udelay(30);
     lcd_command(LCD_DISPLAY | LCD_DIS_ON | LCD_CURS_ON | LCD_BLINKS);
 
@@ -61,6 +60,7 @@ int main()
     lcd_command(LCD_HOME);
 
     lcd_write_char('H');
+    lcd_write_char('E');
 
     HAL_GPIO_WritePin(GPIOE, GPIO_PIN_8, GPIO_PIN_SET);
     return 0;
