@@ -79,4 +79,10 @@
  */
 void lcd_init_i2c_pins();
 
+/*
+ * Init I2C1
+ */
+void lcd_init_i2c();
+
+
 #endif // LCD_ST7032

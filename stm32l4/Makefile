@@ -4,12 +4,12 @@
 
 # NOTE: Only using this makefile temporarly to test
 # some of the software written
-TARGET = lcd-test
+TARGET = lcd-st7302-test
 
 CORESRC = ../Core/Src/
 COREINC = ../Core/Inc/
 
-OBJS  = $(TARGET).o $(CORESRC)lcd-i2c.o $(CORESRC)timer.o $(CORESRC)leds_hal.o $(CORESRC)calc.o $(CORESRC)stack.o $(CORESRC)keypad.o
+OBJS  = $(TARGET).o $(CORESRC)lcd-st7302.o $(CORESRC)timer.o $(CORESRC)leds_hal.o $(CORESRC)calc.o $(CORESRC)stack.o $(CORESRC)keypad.o
 INSTALLDIR = /usr/local/stmdev/
 ARCH = STM32L476xx
 

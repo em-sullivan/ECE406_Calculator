@@ -31,4 +31,26 @@ void lcd_init_i2c_pins()
     __GPIOB_CLK_ENABLE();
     HAL_GPIO_Init(GPIOB, &i2c_pins);
 }
+
+void lcd_init_i2c()
+{
+     // I2C configuration
+    lcd_handler.Instance = I2C1;
+    //lcd_handler.Init.Timing = 0x20E06893;
+    lcd_handler.Init.Timing = 0x00702991;
+    lcd_handler.Init.OwnAddress1 = 0;
+    lcd_handler.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+    lcd_handler.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED;
+    lcd_handler.Init.OwnAddress2 = 0;
+    lcd_handler.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+    lcd_handler.Init.GeneralCallMode = I2C_GENERALCALL_DISABLED;
+    lcd_handler.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED;
+
+    __HAL_RCC_I2C1_CLK_ENABLE();
+    HAL_I2C_Init(&lcd_handler);
+    if (HAL_I2C_IsDeviceReady(&lcd_handler, LCD_SLAVE, 3, 1000) != HAL_OK)
+        while (1);
+    
+    // Enable Analog filter
+    HAL_I2CEx_AnalogFilter_Config(&lcd_handler, I2C_ANALOGFILTER_ENABLED);
 }
