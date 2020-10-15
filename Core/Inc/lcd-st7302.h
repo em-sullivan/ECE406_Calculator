@@ -10,6 +10,7 @@
 #define LCD_ST7032_H
 
 #include <stdint.h>
+#include <stdarg.h>
 
 /* Slave Address */
 #define LCD_SLAVE           0x3E << 1
@@ -86,13 +87,42 @@
 void lcd_init_i2c_pins();
 
 /*
- * Init I2C1
+ * Init I2C1 protocol
  */
 void lcd_init_i2c();
 
+/*
+ * Init LCD screen, with i2c, pins, and necessary commands
+ * to start-up
+ */
+void lcd_init();
+
+/*
+ * Send a command to the LCD screen
+ */
 void lcd_command(uint8_t byte);
+
+/*
+ * Print a character to the LCD screen
+ */
 void lcd_write_char(uint8_t c);
-void lcd_print(char *string);
+
+/*
+ * Print string to LCD screen. Prints where
+ * the current position of the cursor is
+ */
+void lcd_print(char *string, ...);
+
+/*
+ * Shift LCD cursor to the right (if dir is poistive)
+ * or left (if dir is negative)
+ */
+void lcd_shift(int8_t dir);
+
+/*
+ * Deletes character where cursor is currently pointing
+ */
+void lcd_del();
 
 
 #endif // LCD_ST7032

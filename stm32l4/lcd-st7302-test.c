@@ -16,50 +16,17 @@ void system_clock_init(void);
 
 int main()
 {
+    int val = 25;
     // Init system clock and LEDs
     system_clock_init();
     Green_LED_Init();
     timer_init();
     
-    // Init I2c for LCD screen
-    lcd_init_i2c_pins();
-    lcd_init_i2c();
+    lcd_init();
 
-    // Init LCD screen
-
-    // Function set: 8-bit commands and two lines
-    // Also set IS for next commands
-    lcd_command(LCD_FUNC | LCD_FUNC_DL | LCD_FUNC_TWOL | LCD_FUNC_IS);
-    udelay(30);
-
-    // Set internal oscilator frequencey with 221Hz frame frequency
-    // and 1/4 bias 
-    lcd_command(LCD_OSC_FREQ | LCD_OSC_FREQ_BS | LCD_OSC_FREQ_F2);
-    udelay(30);
-
-    // Set contrast
-    lcd_command(LCD_CONTRAST);
-    udelay(30);
-
-    // Power/ICON/Constrast control : Set ICON display on
-    lcd_command(LCD_ICON_SET | LCD_ICON_ION | LCD_ICON_BON | 0x01);
-    udelay(30);
-
-    // Set LCD Follower control
-    lcd_command(LCD_FOLLW | 0xD);
-
-    // Wait 300 ms
-    mdelay(300);
-
-    // Clear IS 
-    udelay(30);
-    lcd_command(LCD_DISPLAY | LCD_DIS_ON | LCD_CURS_ON | LCD_BLINKS);
-
-    lcd_command(LCD_ENTRY | LCD_ENTRY_INC);
-    lcd_command(LCD_CLEAR);
-    lcd_command(LCD_HOME);
-
-    lcd_print("Hello World!");
+    lcd_print("The anser is %d", val);
+    lcd_del();
+    lcd_del();
 
     HAL_GPIO_WritePin(GPIOE, GPIO_PIN_8, GPIO_PIN_SET);
     return 0;

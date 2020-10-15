@@ -55,6 +55,56 @@ void lcd_init_i2c()
     HAL_I2CEx_AnalogFilter_Config(&lcd_handler, I2C_ANALOGFILTER_ENABLED);
 }
 
+void lcd_init()
+{
+    // Enable pins for I2C
+    lcd_init_i2c_pins();
+
+    // Configure I2C1
+    lcd_init_i2c();
+
+    // Init LCD screen
+
+    // Function set: 8-bit commands and two lines
+    // Also set IS for next commands
+    lcd_command(LCD_FUNC | LCD_FUNC_DL | LCD_FUNC_TWOL | LCD_FUNC_IS);
+    udelay(30);
+
+    // Set internal oscilator frequencey with 221Hz frame frequency
+    // and 1/4 bias 
+    lcd_command(LCD_OSC_FREQ | LCD_OSC_FREQ_BS | LCD_OSC_FREQ_F2);
+    udelay(30);
+
+    // Set contrast
+    lcd_command(LCD_CONTRAST | 0x3);
+    udelay(30);
+
+    // Power/ICON/Constrast control : Set ICON display on
+    // button two bits also set contrast
+    lcd_command(LCD_ICON_SET | LCD_ICON_ION | LCD_ICON_BON | 0x01);
+    udelay(30);
+
+    // Set LCD Follower control
+    lcd_command(LCD_FOLLW | 0xD);
+
+    // Wait 300 ms
+    mdelay(300);
+
+    // Clear IS 
+    lcd_command(LCD_FUNC);
+    udelay(30);
+
+    // Turn display on, include blinking cursor
+    lcd_command(LCD_DISPLAY | LCD_DIS_ON | LCD_CURS_ON | LCD_BLINKS);
+
+    // Set cursor direction - INC from left to right
+    lcd_command(LCD_ENTRY | LCD_ENTRY_INC);
+    
+    // Clear screen and set cursor to home
+    lcd_command(LCD_CLEAR);
+    lcd_command(LCD_HOME);
+}
+
 void lcd_command(uint8_t byte)
 {
     uint8_t buf[2];
@@ -76,16 +126,47 @@ void lcd_write_char(uint8_t c)
     buf[1] = c;
 
     HAL_I2C_Master_Transmit(&lcd_handler, LCD_SLAVE, buf, 2, 1000);
-    mdelay(1);
+    udelay(20);
 }
 
-void lcd_print(char *string)
+void lcd_print(char *string, ...)
 {
+    char new_string[17];
+    va_list args;
     uint8_t i;
 
+    va_start(args, string);
+    vsnprintf(new_string, sizeof(new_string), string, args);
+    va_end(args);
+
     for(i = 0; i < 16; i++) {
-        if (string[i] == 0)
+        if (new_string[i] == 0)
             break;
-        lcd_write_char(string[i]);
+        lcd_write_char(new_string[i]);
     }
+}
+
+void lcd_shift(int8_t dir)
+{
+    uint8_t shift;
+    if (dir > 0) {
+        shift = LCD_SHIFT | LCD_RSHIFT;
+    } else {
+        shift = LCD_SHIFT | LCD_LSHIFT;
+    }
+
+    lcd_command(shift);
+}
+
+void lcd_del()
+{
+    // Shift cursot back one
+    lcd_shift(-1);
+
+    // Write blank char
+    lcd_write_char(' ');
+
+    // Shift cursor again so it is in the spot
+    // of the deleted char
+    lcd_shift(-1);
 }
