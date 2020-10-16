@@ -129,9 +129,29 @@ void lcd_shift(int8_t dir);
 void lcd_del();
 
 /*
- *
+ * Move cursor to any poisition on the LCD screen.
+ * x is between 0 and 15, y determines the line its on.
  */
 void lcd_set_cursor(uint8_t x, uint8_t y);
+
+/*
+ * Prints integers in different forms
+ * 0 = OCT
+ * 1 = HEX
+ * 2 = BINARY
+ * else = decimale
+ * Right now this is purely for integer values,
+ * may make a seperate one for floats
+ */
+void lcd_print_int_mode(int val, int mode);
+
+/*
+ * Prints the binary base of an integer value.
+ * If the number is small enough it will only brint
+ * 16-bits, but will print 32 if the value is large (or
+ * negative).
+ */
+void lcd_print_int_binary(int val);
 
 
 #endif // LCD_ST7032

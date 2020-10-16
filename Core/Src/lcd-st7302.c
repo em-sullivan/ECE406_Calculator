@@ -65,9 +65,9 @@ void lcd_init()
 
     // Init LCD screen
 
-    // Function set: 8-bit commands and two lines
-    // Also set IS for next commands
-    lcd_command(LCD_FUNC | LCD_FUNC_DL | LCD_FUNC_TWOL | LCD_FUNC_IS);
+    // Function set: 8-bit commands and
+    // also set IS for next commands
+    lcd_command(LCD_FUNC | LCD_FUNC_DL | LCD_FUNC_IS);
     udelay(30);
 
     // Set internal oscilator frequencey with 221Hz frame frequency
@@ -90,8 +90,8 @@ void lcd_init()
     // Wait 300 ms
     mdelay(300);
 
-    // Clear IS 
-    lcd_command(LCD_FUNC);
+    // Clear IS, set 8-bit commands and two-lines
+    lcd_command(LCD_FUNC | LCD_FUNC_DL | LCD_FUNC_TWOL);
     udelay(30);
 
     // Turn display on, include blinking cursor
@@ -115,7 +115,7 @@ void lcd_command(uint8_t byte)
 
     // Transmit data
     HAL_I2C_Master_Transmit(&lcd_handler, LCD_SLAVE, buf, 2, 1000);
-    mdelay(1);
+    udelay(500);
 }
 
 void lcd_write_char(uint8_t c)
@@ -194,4 +194,47 @@ void lcd_set_cursor(uint8_t x, uint8_t y)
 
     // Change DDRAM to put new position for cursor
     lcd_command(curs + x);
+}
+
+void lcd_print_int_mode(int val, int mode)
+{
+    switch(mode) {
+        case 0:
+            lcd_print("%o", val);
+            break;
+        case 1:
+            lcd_print("%X", val);
+            break;
+        case 2:
+            lcd_print_int_binary(val);
+        default:
+            lcd_print("%d", val);
+    }
+}
+
+void lcd_print_int_binary(int val)
+{
+    uint8_t mask_shift;
+    char binary_num[33];
+
+    // Shifts through each bit and adds it to
+    // binary string
+    for (mask_shift = 0; mask_shift < 32; mask_shift++) {
+        if ((0x80000000U >> mask_shift) & val) {
+            binary_num[mask_shift] = '1';
+        } else {
+            binary_num[mask_shift] = '0';
+        }
+    }
+
+    if (val > 0) {
+        // Print Only lower 16-bits of number if it is small enough
+        lcd_print("%s", &binary_num[16]);
+    } else {
+        // Print full 32-bit number: Uses both rows of LCD screen
+        lcd_command(LCD_CLEAR);
+        lcd_print("%s", binary_num);
+        lcd_set_cursor(0, 1);
+        lcd_print("%s", &binary_num[16]);
+    }
 }
