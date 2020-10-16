@@ -10,6 +10,7 @@
 #define LCD_ST7032_H
 
 #include <stdint.h>
+#include <stdarg.h>
 
 /* Slave Address */
 #define LCD_SLAVE           0x3E << 1
@@ -38,6 +39,10 @@
 #define LCD_FUNC_DH         0x04 // Double Height font
 #define LCD_FUNC_IS			0x01 // Instruction table Select
 
+/* LCD DDRAM */
+#define LCD_SET_DDRAM       0x80
+#define LCD_SET_DDRAM_LINE2 0x40
+
 /* Instruction Table 0 (IS = 0) */
 #define LCD_SHIFT           0x10
 #define LCD_LSHIFT          0x00 // Deafult shift
@@ -51,7 +56,9 @@
 /* LCD Internal Oscillator */
 #define LCD_OSC_FREQ        0x10
 #define LCD_OSC_FREQ_BS     0x08 //BS = 1/4 bias, 0 = 1/5
-#define LCD_OSC_FREQ_F		0x07 // Adjust bits 0 - 2 for Freq
+#define LCD_OSC_FREQ_F2		0x04 // Adjust bits 0 - 2 for Freq
+#define LCD_OSC_FREQ_F1     0x02
+#define LCD_OSC_FREQ_F0
 
 /* LCD ICON Address */
 #define LCD_ICON_ADDR       0x40 // Lower 4 bits sets ICON address
@@ -70,13 +77,81 @@
 /* LCD Contrast Set */
 #define LCD_CONTRAST        0x70 // Set four lower bits for contrast
 
+/* Control Byte bits */
+#define LCD_CONTROL_CO      0x80
+#define LCD_CONTROL_RS      0x40
+
 /* I2C Pins */
-#define SCL_PIN GPIO_PIN_9
-#define SDA_PIN GPIO_PIN_10
+#define SCL_PIN             GPIO_PIN_9
+#define SDA_PIN             GPIO_PIN_10
 
 /*
  * Init pins for i2c
  */
 void lcd_init_i2c_pins();
+
+/*
+ * Init I2C1 protocol
+ */
+void lcd_init_i2c();
+
+/*
+ * Init LCD screen, with i2c, pins, and necessary commands
+ * to start-up
+ */
+void lcd_init();
+
+/*
+ * Send a command to the LCD screen
+ */
+void lcd_command(uint8_t byte);
+
+/*
+ * Print a character to the LCD screen
+ */
+void lcd_write_char(uint8_t c);
+
+/*
+ * Print string to LCD screen. Prints where
+ * the current position of the cursor is
+ */
+void lcd_print(char *string, ...);
+
+/*
+ * Shift LCD cursor to the right (if dir is poistive)
+ * or left (if dir is negative)
+ */
+void lcd_shift(int8_t dir);
+
+/*
+ * Deletes character where cursor is currently pointing
+ */
+void lcd_del();
+
+/*
+ * Move cursor to any poisition on the LCD screen.
+ * x is between 0 and 15, y determines the line its on.
+ */
+void lcd_set_cursor(uint8_t x, uint8_t y);
+
+/*
+ * Prints integers in different forms
+ * 0 = OCT
+ * 1 = HEX
+ * 2 = BINARY
+ * else = decimale
+ * Right now this is purely for integer values,
+ * may make a seperate one for floats
+ */
+void lcd_print_int_mode(int val, int mode);
+
+/*
+ * Prints the binary base of an integer value.
+ * If the number is small enough it will only brint
+ * 16-bits, but will print 32 if the value is large (or
+ * negative).
+ */
+void lcd_print_int_binary(int val);
+
 
 #endif // LCD_ST7032

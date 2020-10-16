@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "timer.h"
-#include "lcd-i2c.h"
+#include "lcd-st7302.h"
 #include "keypad.h"
 #include "calc.h"
 
@@ -93,7 +93,7 @@ int main(void)
             	// Calculate expression and print answer on next line
             	infix_to_postfix(exp_buffer, post_fix);
             	res = eval_postfix(post_fix);
-            	lcd_command(LCD_SET_RAM | LCD_LINE2);
+            	lcd_set_cursor(0, 1);
             	lcd_print("%d", res);
 
             case 255:
