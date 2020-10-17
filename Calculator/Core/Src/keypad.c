@@ -83,21 +83,58 @@ uint8_t keypad_scan()
     return 255;
 }
 
-uint8_t map_key(uint8_t key)
+uint8_t map_key(uint8_t key, uint8_t func)
 {
     // Map of keys for keypad
-	// NOTE: Not final key map, just for testing purposes
-    uint8_t mapped_keys[20] = {'s', 'd', 'c', '/',
-    		                   '1', '2', '3', '+',
-                               '4', '5', '6', '-',
-							   '7', '8', '9', '*',
-							   '.', '0', '_', '='};
+    uint8_t mapped_keys[2][20] = {{'s', 'd', 'c', '/',
+    		                       '1', '2', '3', '+',
+                                   '4', '5', '6', '-',
+                                   '7', '8', '9', '*',
+                                   '.', '0', '_', '='},
+    		                      {'s', 'm', '(', ')',
+                                   'o', 'A', 'B', '&',
+                                   'b', 'C', 'D', '|',
+                                   'h', 'E', 'F', '^',
+                                   '<', '>', '%', '='}};
+
+    // When func is greater then 0 it chooses the 2nd
+    // map for keys
+    if (func > 0) {
+        func = 1;
+    }
 
     // If input key is out of range, return max value
     // else return mapped key
     if (key > 20)
-        return 255;
-     else
-        return mapped_keys[key];
+       return 255;
+    else
+        return mapped_keys[func][key];
+}
+
+
+/*
+ * Fuction to read key with debouncing
+ * work in progress
+ */
+uint8_t read_key()
+{
+    uint16_t count;
+	uint8_t current_read, last_read;
+
+    count = 0;
+    last_read = 255;
+    current_read = 255;
+
+    while (count < 500) {
+        current_read = keypad_scan();
+    	    if (current_read == last_read) {
+    		      count++;
+          } else {
+        	    count = 0;
+        }
+    	last_read = current_read;
+    }
+
+    return last_read;
 }
 

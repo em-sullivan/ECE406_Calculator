@@ -10,8 +10,23 @@
 #define TIMER TIM2
 #include <stdint.h>
 
+/*
+ * Initilize timer 2 for delays
+ */
 void timer_init(void);
+
+/*
+ * Delay function that uses Timer 2
+ * to delay for a specified number
+ * of micro seconds.
+ */
 void udelay(uint16_t micro);
+
+/*
+ * Delay function that uses Timer 2
+ * to delay for a specified number
+ * of milli seconds.
+ */
 void mdelay(uint16_t milli);
 
 #endif // TIMER_H

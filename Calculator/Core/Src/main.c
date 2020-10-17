@@ -1,22 +1,7 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
-  */
-/* USER CODE END Header */
+/*
+ * Eric Sullivan and Elizabeth Willard
+ * Microcontroller based calculator
+ */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include <stdint.h>
@@ -36,10 +21,11 @@ void LED_Init(void);
  */
 int main(void)
 {
-    uint8_t key;
-    char exp_buffer[16];
-    char post_fix[20];
-    char *exp_p;
+    uint8_t key, map;
+    uint8_t mode, ans;
+    char exp_buffer[16]; // Input expression buffer
+    char post_fix[20]; // Postfix expression buffer
+    char *exp_p; // Expression pointer
     int res;
 
     // Set expression pointer to buffer
@@ -63,13 +49,27 @@ int main(void)
     // Test LED that turns on when everything is set up correctly
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_SET);
 
+    // Set current map 0 and output mode to DEC
+    map = 0;
+    ans = 0; // When ans is
+    mode  = DEC;
+
     while (1) {
         // Wait for key to be pressed
         while(keypad_scan() != 255);
         while(keypad_scan() == 255);
 
-        // Scan key
-        key = map_key(keypad_scan());
+        // Clear screen and expression buffer after writing new problem
+        if (ans) {
+        	lcd_command(LCD_CLEAR);s
+        	memset(exp_buffer, 0, sizeof(exp_buffer));
+        	exp_p = exp_buffer;
+        	ans = 0;
+        }
+
+        // Scan key and get key based on currently
+        // selected map
+        key = map_key(keypad_scan(), map);
 
         switch(key) {
             case 'c':
@@ -82,6 +82,7 @@ int main(void)
             	// Set expression pointer back to buffer
             	exp_p = exp_buffer;
             	break;
+
             case 'd':
             	// Delete char from screen and buffer
             	lcd_del();
@@ -93,8 +94,27 @@ int main(void)
             	// Calculate expression and print answer on next line
             	infix_to_postfix(exp_buffer, post_fix);
             	res = eval_postfix(post_fix);
+
+            	// Print answer on next line of LCD screen
             	lcd_set_cursor(0, 1);
-            	lcd_print("%d", res);
+            	lcd_print_int_mode(res, mode);
+            	ans = 1;
+            	break;
+
+            case 's':
+            	// Toggle current key map
+            	map ^= 1;
+            	break;
+
+            case 'm':
+            	// Changes current mode the answer is printed
+            	mode++;
+
+            	// This cycles back to the first mode when
+            	// the max is reached
+            	if (mode > 3)
+            		mode = 0;
+            	break;
 
             case 255:
             	break;

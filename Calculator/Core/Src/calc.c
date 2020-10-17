@@ -53,7 +53,7 @@ float eval_postfix(char *exp)
             negative ^= 1;
         // Performs operation and stores back into stack
         } else {
-            // Pops the last two numbers off the stack, perfrorms
+            // Pops the last two numbers off the stack, performs
             // math operation, then returns answer to stack
             num1 = pop(st);
             num2 = pop(st);
