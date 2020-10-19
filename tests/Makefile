@@ -1,6 +1,6 @@
 CORESRC = ../Core/Src/
 COREINC = ../Core/Inc/
-OBJS = ${CORESRC}stack.o ${CORESRC}calc.o
+OBJS = ${CORESRC}stack.o #${CORESRC}calc.o
 CFLAGS = -Wall -o2 -g -I ${COREINC}
 CC = gcc
 

@@ -10,10 +10,10 @@
 #include <stdint.h>
 
 enum modes {
-    DEC = 0,
-    BIN = 1,
-    HEX = 2,
-    OCT = 3
+    DEC = 3,
+    BIN = 2,
+    HEX = 1,
+    OCT = 0
 };
 
 float eval_postfix(char * expression);

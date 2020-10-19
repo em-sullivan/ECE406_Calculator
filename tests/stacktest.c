@@ -10,22 +10,24 @@
 int main (int argc, char *argv[])
 {
     struct stack *st; //Stack
-    float popval;
+    int popval = 0;
     int stackSize;
     int i; // Index
 
-    st = init_stack(MAXSTACK);
+    st = init_stack(MAXSTACK, sizeof(int));
 
-    push(st, 1);
-    push(st, 2);
-    push(st, 3);
-    push(st, 4);
+    printf("Hello\n");
+    for (i = 1; i < 5; i++) {
+        push(st, (int)i);
+    }
 
-    printf("%f\n", peek(st));
+    //printf("%f\n", peek(st));
     stackSize = stack_size(st);
-    for (i = 0; i < stackSize; i++) {
-        popval = pop(st);
-        printf("%f\n", popval);
+    i = 0;
+    for (i = 0; i < 4; i++) {
+        pop(st, (int) popval);
+        printf("%d\n", popval);
+        printf("%d\n", i);
     }
 
     free_stack(st);
