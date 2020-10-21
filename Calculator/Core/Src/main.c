@@ -2,6 +2,7 @@
  * Eric Sullivan and Elizabeth Willard
  * Microcontroller based calculator
  */
+
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include <stdint.h>
@@ -16,6 +17,8 @@
 void system_clock_init(void);
 void LED_Init(void);
 
+#define BUFFER_SIZE 20
+
 /*
  * Entry Point
  */
@@ -23,13 +26,15 @@ int main(void)
 {
     uint8_t key, map;
     uint8_t mode, ans;
-    char exp_buffer[16]; // Input expression buffer
-    char post_fix[20]; // Postfix expression buffer
+    char exp_buffer[BUFFER_SIZE]; // Input expression buffer
+    char post_fix[BUFFER_SIZE]; // Postfix expression buffer
     char *exp_p; // Expression pointer
+    char *exp_start;
     int res;
 
     // Set expression pointer to buffer
     exp_p = exp_buffer;
+    exp_start = exp_buffer;
 
     // Init System Clock
     system_clock_init();
@@ -61,9 +66,10 @@ int main(void)
 
         // Clear screen and expression buffer after writing new problem
         if (ans) {
-        	lcd_command(LCD_CLEAR);s
+        	lcd_command(LCD_CLEAR);
         	memset(exp_buffer, 0, sizeof(exp_buffer));
         	exp_p = exp_buffer;
+        	exp_start = exp_buffer;
         	ans = 0;
         }
 
@@ -79,15 +85,26 @@ int main(void)
             	// Clear expression buffer
             	memset(exp_buffer, 0, sizeof(exp_buffer));
 
-            	// Set expression pointer back to buffer
+            	// Set expression pointers back to buffer
             	exp_p = exp_buffer;
+            	exp_start = exp_buffer;
             	break;
 
             case 'd':
             	// Delete char from screen and buffer
-            	lcd_del();
-            	*exp_p = 0;
-            	exp_p--;
+            	if (exp_p - exp_buffer > 0) {
+            		lcd_del();
+            		*exp_p = 0;
+            		exp_p--;
+
+            		// Re-adjust screen
+            		if (exp_p - exp_buffer > 14) {
+            			exp_start--;
+            			lcd_command(LCD_CLEAR);
+            			lcd_print("%s", exp_start);
+            		}
+            	}
+
             	break;
 
             case '=':
@@ -119,8 +136,16 @@ int main(void)
             case 255:
             	break;
             default:
-            	// Checks if expression if less then 16 chars
-            	if (exp_p - exp_buffer < 16) {
+            	// Checks if expression is longer then char limit of LCD screen
+            	if ((exp_p - exp_buffer > 15) && (exp_p - exp_buffer < (BUFFER_SIZE - 1))) {
+
+            		// Prints screen from new starting point to 'scroll' screen
+            		lcd_command(LCD_CLEAR);
+            		exp_start++;
+            		lcd_print("%s", exp_start);
+            	}
+
+            	if (exp_p - exp_buffer < (BUFFER_SIZE - 1)) {
             		// Write char to screen, save it to expression buffer
             	    lcd_write_char(key);
             	    *exp_p = key;
