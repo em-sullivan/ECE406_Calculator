@@ -23,7 +23,7 @@ struct stack *init_stack(uint32_t s_size, uint32_t e_size)
     st->top = 0;
 
     // Allocate memory for data of stack
-    st->data = (uint8_t*)malloc(e_size * s_size);
+    st->data = (void **)malloc(sizeof(void **) * s_size);
     if(st->data == NULL) {
         printf("Error! Not enough memory!\n");
         free(st);
@@ -51,44 +51,27 @@ int8_t stack_isfull(struct stack *st)
 
 int8_t push(struct stack *st, void *val)
 {
-    uint32_t i, index;
-
     //Checks to see if the stack is full
     if (stack_isfull(st)) {
         printf("Stack overflow\n");
         return 1;
     }
 
-    index = (st->top) * st->element_size;
-
-    for (i = 0; i < st->element_size; i++) {
-        *(st->data + index + i) = *((uint8_t *)val + i);
-    }
-
+    st->data[st->top] = val;
     st->top++;
-    //st->data[++st->top] = val;
     return 0;
 }
 
-int8_t pop(struct stack *st, void *ret)
+void * pop(struct stack *st)
 {
-    uint8_t index, i;
     // Checks if stack is empty
     if (stack_isempty(st)) {
         printf("Stack Underflow\n");
-        return 1;
-    }
-
-    //memset(ret, 0, sizeof(st->element_size));
-    index = (st->top) * st->element_size;
-    for (i = 0; i < st->element_size; i++) {
-         *(st->data + index + i) = *((uint8_t *)ret + i);
+        return;
     }
 
     st->top--;
-    return 0;
-
-    //return st->data[st->top--];
+    return st->data[st->top];
 }
 
 void * peek(struct stack *st)
