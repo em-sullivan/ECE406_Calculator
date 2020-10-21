@@ -86,16 +86,17 @@ uint8_t keypad_scan()
 uint8_t map_key(uint8_t key, uint8_t func)
 {
     // Map of keys for keypad
-    uint8_t mapped_keys[2][20] = {{'s', 'd', 'c', '/',
-    		                       '1', '2', '3', '+',
-                                   '4', '5', '6', '-',
-                                   '7', '8', '9', '*',
-                                   '.', '0', '_', '='},
-    		                      {'s', 'm', '(', ')',
-                                   'o', 'A', 'B', '&',
-                                   'b', 'C', 'D', '|',
-                                   'h', 'E', 'F', '^',
-                                   '<', '>', '%', '='}};
+    uint8_t mapped_keys[2][20] = {
+    {'s', 'd', 'c', '/',
+    '1', '2', '3', '+',
+    '4', '5', '6', '-',
+    '7', '8', '9', '*',
+    '.', '0', '_', '='},
+    {'s', 'm', '(', ')',
+    'o', 'A', 'B', '&',
+    'b', 'C', 'D', '|',
+    'h', 'E', 'F', '^',
+    '<', '>', '%', '='}};
 
     // When func is greater then 0 it chooses the 2nd
     // map for keys
@@ -119,7 +120,7 @@ uint8_t map_key(uint8_t key, uint8_t func)
 uint8_t read_key()
 {
     uint16_t count;
-	uint8_t current_read, last_read;
+    uint8_t current_read, last_read;
 
     count = 0;
     last_read = 255;
@@ -132,7 +133,8 @@ uint8_t read_key()
           } else {
         	    count = 0;
         }
-    	last_read = current_read;
+    	
+        last_read = current_read;
     }
 
     return last_read;
