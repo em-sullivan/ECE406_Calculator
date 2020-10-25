@@ -2,6 +2,7 @@
  * Eric Sullivan and Elizabeth Willard
  * Microcontroller based calculator
  */
+
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include <stdint.h>
@@ -16,6 +17,8 @@
 void system_clock_init(void);
 void LED_Init(void);
 
+#define BUFFER_SIZE 20
+
 /*
  * Entry Point
  */
@@ -23,13 +26,15 @@ int main(void)
 {
     uint8_t key, map;
     uint8_t mode, ans;
-    char exp_buffer[16]; // Input expression buffer
-    char post_fix[20]; // Postfix expression buffer
+    char exp_buffer[BUFFER_SIZE]; // Input expression buffer
+    char post_fix[BUFFER_SIZE]; // Postfix expression buffer
     char *exp_p; // Expression pointer
+    char *exp_start;
     int res;
 
     // Set expression pointer to buffer
     exp_p = exp_buffer;
+    exp_start = exp_buffer;
 
     // Init System Clock
     system_clock_init();
@@ -61,75 +66,95 @@ int main(void)
 
         // Clear screen and expression buffer after writing new problem
         if (ans) {
-        	lcd_command(LCD_CLEAR);s
-        	memset(exp_buffer, 0, sizeof(exp_buffer));
-        	exp_p = exp_buffer;
-        	ans = 0;
+            lcd_command(LCD_CLEAR);
+            memset(exp_buffer, 0, sizeof(exp_buffer));
+            exp_p = exp_buffer;
+            exp_start = exp_buffer;
+            ans = 0;
         }
 
         // Scan key and get key based on currently
         // selected map
         key = map_key(keypad_scan(), map);
 
-        switch(key) {
+        switch (key) {
             case 'c':
-            	// Clear screen
-            	lcd_command(LCD_CLEAR);
+                // Clear screen
+                lcd_command(LCD_CLEAR);
 
-            	// Clear expression buffer
-            	memset(exp_buffer, 0, sizeof(exp_buffer));
+                // Clear expression buffer
+                memset(exp_buffer, 0, sizeof(exp_buffer));
 
-            	// Set expression pointer back to buffer
-            	exp_p = exp_buffer;
-            	break;
+                // Set expression pointers back to buffer
+                exp_p = exp_buffer;
+                exp_start = exp_buffer;
+                break;
 
             case 'd':
-            	// Delete char from screen and buffer
-            	lcd_del();
-            	*exp_p = 0;
-            	exp_p--;
-            	break;
+                // Delete char from screen and buffer
+                if (exp_p - exp_buffer > 0) {   
+                    lcd_del();
+                    *exp_p = 0;
+                    exp_p--;
+
+                    // Re-adjust screen
+                    if (exp_p - exp_buffer > 14) {
+                        exp_start--;
+                        lcd_command(LCD_CLEAR);
+                        lcd_print("%s", exp_start);
+                    }
+                }
+
+                break;
 
             case '=':
-            	// Calculate expression and print answer on next line
-            	infix_to_postfix(exp_buffer, post_fix);
-            	res = eval_postfix(post_fix);
+                // Calculate expression and print answer on next line
+                infix_to_postfix(exp_buffer, post_fix);
+                res = eval_postfix(post_fix);
 
-            	// Print answer on next line of LCD screen
-            	lcd_set_cursor(0, 1);
-            	lcd_print_int_mode(res, mode);
-            	ans = 1;
-            	break;
+                // Print answer on next line of LCD screen
+                lcd_set_cursor(0, 1);
+                lcd_print_int_mode(res, mode);
+                ans = 1;
+                break;
 
             case 's':
-            	// Toggle current key map
-            	map ^= 1;
-            	break;
+                // Toggle current key map
+                map ^= 1;
+                break;
 
             case 'm':
-            	// Changes current mode the answer is printed
-            	mode++;
+                // Changes current mode the answer is printed
+                mode++;
 
-            	// This cycles back to the first mode when
-            	// the max is reached
-            	if (mode > 3)
-            		mode = 0;
-            	break;
+                // This cycles back to the first mode when
+                // the max is reached
+                if (mode > 3)
+                    mode = 0;
+                break;
 
             case 255:
-            	break;
+                break;
             default:
-            	// Checks if expression if less then 16 chars
-            	if (exp_p - exp_buffer < 16) {
-            		// Write char to screen, save it to expression buffer
-            	    lcd_write_char(key);
-            	    *exp_p = key;
+                // Checks if expression is longer then char limit of LCD screen
+                if ((exp_p - exp_buffer > 15) && (exp_p - exp_buffer < (BUFFER_SIZE - 1))) {
 
-            	    // Move to next char of buffer
-            	    exp_p++;
-            	    // Set null character to end (current) end of buffer
-            	    *exp_p = '\0';
-            	}
+                    // Prints screen from new starting point to 'scroll' screen
+                    lcd_command(LCD_CLEAR);
+                    exp_start++;
+                    lcd_print("%s", exp_start);
+                }
+
+                if (exp_p - exp_buffer < (BUFFER_SIZE - 1)) {
+                    // Write char to screen, save it to expression buffer
+                    lcd_write_char(key);
+                    *exp_p = key;
+                    
+                    // Move to next char of buffer
+                    exp_p++;
+                    // Set null character to end (current) end of buffer
+                    *exp_p = '\0';
+                }
         }
     }
 }
