@@ -9,7 +9,7 @@
 #include <string.h>
 #include "stack.h"
 
-struct stack *init_stack(uint32_t s_size, uint32_t e_size)
+struct stack *init_stack(uint32_t s_size)
 {
     // Allocate memory for struct
     struct stack *st = (struct stack*)malloc(sizeof(struct stack));
@@ -19,7 +19,6 @@ struct stack *init_stack(uint32_t s_size, uint32_t e_size)
     }
     
     st->maxsize = s_size;
-    st->element_size = e_size;
     st->top = 0;
 
     // Allocate memory for data of stack
@@ -67,7 +66,7 @@ void * pop(struct stack *st)
     // Checks if stack is empty
     if (stack_isempty(st)) {
         printf("Stack Underflow\n");
-        return;
+        return NULL;
     }
 
     st->top--;
@@ -77,7 +76,7 @@ void * pop(struct stack *st)
 void * peek(struct stack *st)
 {
     // Looks at the top of the stack
-    return st->data[st->top];
+    return st->data[st->top - 1];
 }
 
 void free_stack(struct stack *st)

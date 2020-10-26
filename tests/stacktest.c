@@ -21,7 +21,7 @@ int main (int argc, char *argv[])
         push(st, &data[i]);
     }
 
-    //printf("%f\n", peek(st));
+    printf("%f\n", *(float*)peek(st));
     stackSize = stack_size(st);
     i = 0;
     for (i = 0; i < 4; i++) {
