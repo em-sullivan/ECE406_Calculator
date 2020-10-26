@@ -30,7 +30,7 @@ int main(void)
     char post_fix[BUFFER_SIZE]; // Postfix expression buffer
     char *exp_p; // Expression pointer
     char *exp_start;
-    int res;
+    double res;
 
     // Set expression pointer to buffer
     exp_p = exp_buffer;
@@ -115,6 +115,7 @@ int main(void)
                 // Print answer on next line of LCD screen
                 lcd_set_cursor(0, 1);
                 lcd_print_int_mode(res, mode);
+                //lcd_print("%lf", res);
                 ans = 1;
                 break;
 

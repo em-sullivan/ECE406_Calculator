@@ -11,10 +11,10 @@
 #include "stack.h"
 #include "calc.h"
 
-float eval_postfix(char *exp)
+double eval_postfix(char *exp)
 {
     char *cp;
-    float num1, num2, num3;
+    double num1, num2, num3;
     char temp[20];
     struct stack *st;
     int negative = 0;
@@ -38,7 +38,7 @@ float eval_postfix(char *exp)
         
         // Stores number into stack 
         } else if (*cp == ',') {
-            num1 = strtof(temp, NULL);
+            num1 = strtod(temp, NULL);
             if (negative)
                 num1 *= -1.0;
             
@@ -69,9 +69,9 @@ float eval_postfix(char *exp)
     return num1;
 }
 
-float express(char op, float n1, float n2)
+double express(char op, double n1, double n2)
 {
-    float ans;
+    double ans;
 
     switch(op) {
         case '+':
@@ -95,6 +95,12 @@ float express(char op, float n1, float n2)
         case '^':
             ans = (int)n1 ^ (int)n2;
             break;
+        case '<':
+            ans = (int)n2 << (int)n1;
+            break;
+        case '>':
+            ans = (int)n2 >> (int)n1;
+            break;
         default:
             ans = 0; 
             break;
@@ -112,12 +118,15 @@ int precd(char op)
             return 2;
         case '|':
             return 3;
+        case '<':
+        case '>':
+            return 4;
         case '+':
         case '-':
-            return 4;
+            return 5;
         case '*':
         case '/':
-            return 5;
+            return 6;
         default: break;
     }
     

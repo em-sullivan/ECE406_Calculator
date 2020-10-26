@@ -143,7 +143,9 @@ void lcd_set_cursor(uint8_t x, uint8_t y);
  * Right now this is purely for integer values,
  * may make a seperate one for floats
  */
-void lcd_print_int_mode(int val, int mode);
+void lcd_print_int_mode(double val, int mode);
+
+void lcd_print_float(float val);
 
 /*
  * Prints the binary base of an integer value.

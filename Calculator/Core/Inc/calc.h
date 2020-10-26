@@ -16,8 +16,8 @@ enum modes {
     OCT = 0
 };
 
-float eval_postfix(char * expression);
-float express(char op, float n1, float n2);
+double eval_postfix(char *expression);
+double express(char op, double n1,double n2);
 int precd(char op);
 int infix_to_postfix(char *inexp, char *postexp);
 void print_binary(int val);

@@ -195,19 +195,19 @@ void lcd_set_cursor(uint8_t x, uint8_t y)
     lcd_command(curs + x);
 }
 
-void lcd_print_int_mode(int val, int mode)
+void lcd_print_int_mode(double val, int mode)
 {
     switch(mode) {
         case 0:
-            lcd_print("%o", val);
+            lcd_print("%o", (int)val);
             break;
         case 1:
-            lcd_print("%X", val);
+            lcd_print("%X", (int)val);
             break;
         case 2:
-            lcd_print_int_binary(val);
+            lcd_print_int_binary((int)val);
         default:
-            lcd_print("%d", val);
+            lcd_print("%lf", val);
     }
 }
 
