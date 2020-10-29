@@ -16,7 +16,7 @@ enum modes {
     OCT = 0
 };
 
-double eval_postfix(char *expression);
+int eval_postfix(char *expression, double *ans);
 double express(char op, double n1,double n2);
 int precd(char op);
 int infix_to_postfix(char *inexp, char *postexp);

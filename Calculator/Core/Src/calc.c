@@ -11,7 +11,7 @@
 #include "stack.h"
 #include "calc.h"
 
-double eval_postfix(char *exp)
+int eval_postfix(char *exp, double *ans)
 {
     char *cp;
     double num1, num2, num3;
@@ -44,7 +44,13 @@ double eval_postfix(char *exp)
             
             // Push number to stack, reset temp string
             // and negative val
-            push(st, num1);
+            // If stack is empty, then the expression is invalid
+            if (!stack_isfull(st)) {
+                push(st, num1);
+            } else {
+                free_stack(st);
+                return 2;
+            }
             strcpy(temp, "");
             negative = 0;
             
@@ -55,8 +61,19 @@ double eval_postfix(char *exp)
         } else {
             // Pops the last two numbers off the stack, performs
             // math operation, then returns answer to stack
-            num1 = pop(st);
-            num2 = pop(st);
+            // If stack is empty, then cleanup and return error value
+            if (!stack_isempty(st)) {
+                num1 = pop(st);
+            } else {
+                free_stack(st);
+                return 3;
+            }
+            if (!stack_isempty(st)) {
+                num2 = pop(st);
+            } else {
+                free_stack(st);
+                return 4;
+            }
             num3 = express(*cp, num1, num2);
             push(st, num3);
         }
@@ -64,9 +81,16 @@ double eval_postfix(char *exp)
     }
 
     // Final result
-    num1 = pop(st);
+    if (!stack_isempty(st)) {
+        num1 = pop(st);
+    } else {
+        free_stack(st);
+        return 5;
+    }
+    
     free_stack(st);
-    return num1;
+    *ans = num1;
+    return 0;
 }
 
 double express(char op, double n1, double n2)

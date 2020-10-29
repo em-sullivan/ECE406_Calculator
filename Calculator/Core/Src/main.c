@@ -110,13 +110,20 @@ int main(void)
             case '=':
                 // Calculate expression and print answer on next line
                 infix_to_postfix(exp_buffer, post_fix);
-                res = eval_postfix(post_fix);
+                if (eval_postfix(post_fix, &res) != 0) {
+                    // If expression is invalid, print error message to screen
+                    lcd_set_cursor(0, 0);
+                    lcd_print("INVALID");
+                    lcd_set_cursor(0, 1);
+                    lcd_print("SYNTAX!");
+                    ans = 1;
+                } else {
+                    // Print answer on next line of LCD screen
+                    lcd_set_cursor(0, 1);
+                    lcd_print_int_mode(res, mode);
+                    ans = 1;
+                }
 
-                // Print answer on next line of LCD screen
-                lcd_set_cursor(0, 1);
-                lcd_print_int_mode(res, mode);
-                //lcd_print("%lf", res);
-                ans = 1;
                 break;
 
             case 's':
