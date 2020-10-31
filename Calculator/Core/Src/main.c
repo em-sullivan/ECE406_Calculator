@@ -61,11 +61,12 @@ int main(void)
 
     while (1) {
         // Wait for key to be pressed
-        while(keypad_scan() != 255);
-        while(keypad_scan() == 255);
+        //while(keypad_scan() != 255);
+        //while(keypad_scan() == 255);
+        key = read_key();
 
         // Clear screen and expression buffer after writing new problem
-        if (ans) {
+        if (ans && key != 255) {
             lcd_command(LCD_CLEAR);
             memset(exp_buffer, 0, sizeof(exp_buffer));
             exp_p = exp_buffer;
@@ -112,6 +113,8 @@ int main(void)
                 infix_to_postfix(exp_buffer, post_fix);
                 if (eval_postfix(post_fix, &res) != 0) {
                     // If expression is invalid, print error message to screen
+                    lcd_command(LCD_CLEAR);
+                    // Have to set cursor to 0,0
                     lcd_set_cursor(0, 0);
                     lcd_print("INVALID");
                     lcd_set_cursor(0, 1);
@@ -164,6 +167,9 @@ int main(void)
                     *exp_p = '\0';
                 }
         }
+
+        if (key != 255)
+            mdelay(500);
     }
 }
 

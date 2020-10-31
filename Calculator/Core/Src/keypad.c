@@ -87,12 +87,12 @@ uint8_t map_key(uint8_t key, uint8_t func)
 {
     // Map of keys for keypad
     uint8_t mapped_keys[2][20] = {
-    {'s', 'd', 'c', '/',
+    {'s', '(', ')', '/',
     '1', '2', '3', '+',
     '4', '5', '6', '-',
     '7', '8', '9', '*',
     '.', '0', '_', '='},
-    {'s', 'm', '(', ')',
+    {'s', 'm', 'd', 'c',
     '1', '2', '3', '&',
     '4', '5', '6', '|',
     '7', '8', '9', '^',
@@ -126,7 +126,8 @@ uint8_t read_key()
     last_read = 255;
     current_read = 255;
 
-    while (count < 500) {
+    // Waits for 5 scans for debounce
+    while (count < 5) {
         current_read = keypad_scan();
     	    if (current_read == last_read) {
     		      count++;
@@ -135,6 +136,7 @@ uint8_t read_key()
         }
     	
         last_read = current_read;
+        udelay(500);
     }
 
     return last_read;

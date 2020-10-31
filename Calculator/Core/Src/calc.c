@@ -192,6 +192,7 @@ int infix_to_postfix(char *inexp, char *postexp)
 
             // Checking if a ( was never reached
             if(!stack_isempty(st) && peek(st) != '(') {
+                free_stack(st);
                 return 2;
             } else {
                 pop(st);
