@@ -136,7 +136,7 @@ uint8_t read_key()
         }
     	
         last_read = current_read;
-        udelay(500);
+        udelay(20);
     }
 
     return last_read;

@@ -28,6 +28,7 @@ int main(void)
     uint8_t mode, ans;
     char exp_buffer[BUFFER_SIZE]; // Input expression buffer
     char post_fix[BUFFER_SIZE]; // Postfix expression buffer
+    char prev_ans[BUFFER_SIZE];
     char *exp_p; // Expression pointer
     char *exp_start;
     double res;
@@ -60,28 +61,28 @@ int main(void)
     mode  = DEC;
 
     while (1) {
-        // Wait for key to be pressed
-        //while(keypad_scan() != 255);
-        //while(keypad_scan() == 255);
+      
+        // Read key
         key = read_key();
 
         // Clear screen and expression buffer after writing new problem
         if (ans && key != 255) {
             lcd_command(LCD_CLEAR);
+            lcd_command(LCD_HOME);
             memset(exp_buffer, 0, sizeof(exp_buffer));
             exp_p = exp_buffer;
             exp_start = exp_buffer;
             ans = 0;
         }
 
-        // Scan key and get key based on currently
-        // selected map
-        key = map_key(keypad_scan(), map);
+        // Gey key from key map
+        key = map_key(key, map);
 
         switch (key) {
             case 'c':
                 // Clear screen
                 lcd_command(LCD_CLEAR);
+                lcd_command(LCD_HOME);
 
                 // Clear expression buffer
                 memset(exp_buffer, 0, sizeof(exp_buffer));
@@ -102,6 +103,7 @@ int main(void)
                     if (exp_p - exp_buffer > 14) {
                         exp_start--;
                         lcd_command(LCD_CLEAR);
+                        lcd_command(LCD_HOME);
                         lcd_print("%s", exp_start);
                     }
                 }
@@ -114,8 +116,8 @@ int main(void)
                 if (eval_postfix(post_fix, &res) != 0) {
                     // If expression is invalid, print error message to screen
                     lcd_command(LCD_CLEAR);
-                    // Have to set cursor to 0,0
-                    lcd_set_cursor(0, 0);
+                    // Have to set cursor to home
+                    lcd_command(LCD_HOME);
                     lcd_print("INVALID");
                     lcd_set_cursor(0, 1);
                     lcd_print("SYNTAX!");
@@ -152,6 +154,7 @@ int main(void)
 
                     // Prints screen from new starting point to 'scroll' screen
                     lcd_command(LCD_CLEAR);
+                    lcd_command(LCD_HOME);
                     exp_start++;
                     lcd_print("%s", exp_start);
                 }
@@ -169,7 +172,7 @@ int main(void)
         }
 
         if (key != 255)
-            mdelay(500);
+            mdelay(400);
     }
 }
 
