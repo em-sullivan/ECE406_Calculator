@@ -205,6 +205,7 @@ void lcd_clear()
 
 void lcd_print_int_mode(double val, int mode)
 {
+    long int integer;
     switch(mode) {
         case 0:
             lcd_print("%o", (int)val);
@@ -214,6 +215,12 @@ void lcd_print_int_mode(double val, int mode)
             break;
         case 2:
             lcd_print_int_binary((int)val);
+        case 3:
+            if (val > 2147483647.0)
+                lcd_print("%u", (unsigned int)val);
+            else 
+                lcd_print("%d", (int) val);
+            break;
         default:
             lcd_print("%lf", val);
     }
@@ -239,7 +246,7 @@ void lcd_print_int_binary(int val)
         lcd_print("%s", &binary_num[16]);
     } else {
         // Print full 32-bit number: Uses both rows of LCD screen
-        lcd_command(LCD_CLEAR);
+        lcd_clear();
         lcd_print("%s", binary_num);
         lcd_set_cursor(0, 1);
         lcd_print("%s", &binary_num[16]);

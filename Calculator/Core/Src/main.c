@@ -58,7 +58,7 @@ int main(void)
     // Set current map 0 and output mode to DEC
     map = 0;
     ans = 0; // When ans is
-    mode  = DEC;
+    mode  = 3;
 
     while (1) {
       
@@ -67,12 +67,12 @@ int main(void)
 
         // Clear screen and expression buffer after writing new problem
         if (ans && key != 255) {
-            lcd_command(LCD_CLEAR);
-            lcd_command(LCD_HOME);
+            lcd_clear();
             memset(exp_buffer, 0, sizeof(exp_buffer));
             exp_p = exp_buffer;
             exp_start = exp_buffer;
             ans = 0;
+            res = 0;
         }
 
         // Gey key from key map
@@ -81,8 +81,7 @@ int main(void)
         switch (key) {
             case 'c':
                 // Clear screen
-                lcd_command(LCD_CLEAR);
-                lcd_command(LCD_HOME);
+                lcd_clear();
 
                 // Clear expression buffer
                 memset(exp_buffer, 0, sizeof(exp_buffer));
@@ -102,8 +101,7 @@ int main(void)
                     // Re-adjust screen
                     if (exp_p - exp_buffer > 14) {
                         exp_start--;
-                        lcd_command(LCD_CLEAR);
-                        lcd_command(LCD_HOME);
+                        lcd_clear();
                         lcd_print("%s", exp_start);
                     }
                 }
@@ -115,9 +113,7 @@ int main(void)
                 infix_to_postfix(exp_buffer, post_fix);
                 if (eval_postfix(post_fix, &res) != 0) {
                     // If expression is invalid, print error message to screen
-                    lcd_command(LCD_CLEAR);
-                    // Have to set cursor to home
-                    lcd_command(LCD_HOME);
+                    lcd_clear();
                     lcd_print("INVALID");
                     lcd_set_cursor(0, 1);
                     lcd_print("SYNTAX!");
@@ -142,7 +138,7 @@ int main(void)
 
                 // This cycles back to the first mode when
                 // the max is reached
-                if (mode > 3)
+                if (mode > 4)
                     mode = 0;
                 break;
 
@@ -153,8 +149,7 @@ int main(void)
                 if ((exp_p - exp_buffer > 15) && (exp_p - exp_buffer < (BUFFER_SIZE - 1))) {
 
                     // Prints screen from new starting point to 'scroll' screen
-                    lcd_command(LCD_CLEAR);
-                    lcd_command(LCD_HOME);
+                    lcd_clear();
                     exp_start++;
                     lcd_print("%s", exp_start);
                 }
