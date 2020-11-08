@@ -163,6 +163,7 @@ int infix_to_postfix(char *inexp, char *postexp)
     char *infixp;
     char *postfixp;
     
+    // Init stack
     st = init_stack(MAXSTACK);
     if (st == NULL) {
         printf("Could not create struct!\n");

@@ -135,6 +135,12 @@ void lcd_del();
 void lcd_set_cursor(uint8_t x, uint8_t y);
 
 /*
+ * Clear LCD screen and set cursor to the
+ * starting position
+ */
+void lcd_clear();
+
+/*
  * Prints integers in different forms
  * 0 = OCT
  * 1 = HEX

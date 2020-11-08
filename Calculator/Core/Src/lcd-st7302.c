@@ -142,7 +142,8 @@ void lcd_print(char *string, ...)
 
     // Prints up to 16 chars or unitl null char
     // is reached
-    for(i = 0; i < 16; i++) {
+    for (i = 0; i < 16; i++) {
+        // Stops printing if NULL char is reached
         if (new_string[i] == 0)
             break;
         lcd_write_char(new_string[i]);
@@ -193,6 +194,13 @@ void lcd_set_cursor(uint8_t x, uint8_t y)
 
     // Change DDRAM to put new position for cursor
     lcd_command(curs + x);
+}
+
+void lcd_clear()
+{
+    // Clear screen and reset cursor
+    lcd_command(LCD_CLEAR);
+    lcd_command(LCD_HOME);
 }
 
 void lcd_print_int_mode(double val, int mode)
