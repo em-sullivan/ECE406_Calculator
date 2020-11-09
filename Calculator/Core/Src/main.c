@@ -72,7 +72,7 @@ int main(void)
             exp_p = exp_buffer;
             exp_start = exp_buffer;
             ans = 0;
-            res = 0;
+
         }
 
         // Gey key from key map
@@ -118,6 +118,7 @@ int main(void)
                     lcd_set_cursor(0, 1);
                     lcd_print("SYNTAX!");
                     ans = 1;
+                    res = 0;
                 } else {
                     // Print answer on next line of LCD screen
                     lcd_set_cursor(0, 1);
@@ -141,6 +142,24 @@ int main(void)
                 if (mode > 4)
                     mode = 0;
                 break;
+            case 'p':
+                // Convert previous answer to string
+                sprintf(prev_ans, "%lf", res);
+                // Breaks if the string is too long to add to the buffer
+                if (strlen(prev_ans) + strlen(exp_buffer) > BUFFER_SIZE)
+                    break;
+
+                // Concat number to buffer
+                strcat(exp_p, prev_ans);
+                exp_p = exp_p + strlen(prev_ans);
+
+                // Adjust starting pointer
+                while (exp_p - exp_start > 14)
+                    exp_start++;
+
+                // Reprint result
+                lcd_clear();
+                lcd_print("%s", exp_start);
 
             case 255:
                 break;
