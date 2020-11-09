@@ -10,7 +10,7 @@
 #include "timer.h"
 
 /* GPIO Pins for rows  (GPIOC)*/
-uint16_t keypad_rows[] = {GPIO_PIN_4, GPIO_PIN_6, GPIO_PIN_7, GPIO_PIN_8, GPIO_PIN_9};
+uint16_t keypad_rows[] = {GPIO_PIN_10, GPIO_PIN_4, GPIO_PIN_6, GPIO_PIN_7, GPIO_PIN_8, GPIO_PIN_9};
 
 /* GPIO Pins for cols (GPIOC) */
 uint16_t keypad_cols[] = {GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_3};
@@ -51,7 +51,7 @@ uint8_t keypad_scan()
     uint8_t row, col;
 
     // Set output rows to 0
-    GPIOC->ODR &= ~(keypad_rows[0] | keypad_rows[1] | keypad_rows[2] | keypad_rows[3] | keypad_rows[4]);
+    GPIOC->ODR &= ~(keypad_rows[0] | keypad_rows[1] | keypad_rows[2] | keypad_rows[3] | keypad_rows[4] | keypad_rows[5]);
 
     // Read to see if and input is high
     if ((GPIOC->IDR & (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3])) == (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3]))
@@ -64,7 +64,7 @@ uint8_t keypad_scan()
     for (row = 0; row < KEYPAD_ROW_SIZE; row++) {
         
         // Sets current row to 0, all other rows are high
-        GPIOC->ODR |= (keypad_rows[0] | keypad_rows[1] | keypad_rows[2] | keypad_rows[3] | keypad_rows[4]);
+        GPIOC->ODR |= (keypad_rows[0] | keypad_rows[1] | keypad_rows[2] | keypad_rows[3] | keypad_rows[4] | keypad_rows[5]);
         GPIOC->ODR &= ~(keypad_rows[row]);
         udelay(40);
 
@@ -86,13 +86,16 @@ uint8_t keypad_scan()
 uint8_t map_key(uint8_t key, uint8_t func)
 {
     // Map of keys for keypad
-    uint8_t mapped_keys[2][20] = {
-    {'s', '(', ')', '/',
+    uint8_t mapped_keys[2][24] = {
+    {'s', 'm', 'd', 'c',
+    'm', '(', ')', '/',
     '1', '2', '3', '+',
     '4', '5', '6', '-',
     '7', '8', '9', '*',
     '.', '0', '_', '='},
+    // Keymap 2 has bit operators
     {'s', 'm', 'd', 'c',
+    'o', 'x', 'b', '%', 
     '1', '2', '3', '&',
     '4', '5', '6', '|',
     '7', '8', '9', '^',
@@ -106,7 +109,7 @@ uint8_t map_key(uint8_t key, uint8_t func)
 
     // If input key is out of range, return max value
     // else return mapped key
-    if (key > 20)
+    if (key > 23)
        return 255;
     else
         return mapped_keys[func][key];

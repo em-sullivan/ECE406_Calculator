@@ -11,7 +11,7 @@
 #include <stdint.h>
 
 /* Size of Matrix */
-#define KEYPAD_ROW_SIZE 5
+#define KEYPAD_ROW_SIZE 6
 #define KEYPAD_COL_SIZE 4
 
 
