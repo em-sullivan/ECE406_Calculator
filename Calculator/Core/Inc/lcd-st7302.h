@@ -145,13 +145,11 @@ void lcd_clear();
  * 0 = OCT
  * 1 = HEX
  * 2 = BINARY
- * else = decimale
- * Right now this is purely for integer values,
- * may make a seperate one for floats
+ * 3 = Integer-based decimale
+ * else = Floatingpoint based decimale
+ *
  */
 void lcd_print_int_mode(double val, int mode);
-
-void lcd_print_float(float val);
 
 /*
  * Prints the binary base of an integer value.

@@ -205,16 +205,24 @@ void lcd_clear()
 
 void lcd_print_int_mode(double val, int mode)
 {
-    long int integer;
     switch(mode) {
         case 0:
-            lcd_print("%o", (int)val);
+            if (val > 2147483647.0)
+                lcd_print("%o", (unsigned int)val);
+            else 
+                lcd_print("%o", (int)val);
             break;
         case 1:
-            lcd_print("%X", (int)val);
+            if (val > 2147483647.0)
+                lcd_print("%X", (unsigned int)val);
+            else 
+                lcd_print("%X", (int)val);
             break;
         case 2:
-            lcd_print_int_binary((int)val);
+            if (val > 2147483647.0)
+                lcd_print_int_binary((unsigned int)val);
+            else
+                lcd_print_int_binary((int)val);
         case 3:
             if (val > 2147483647.0)
                 lcd_print("%u", (unsigned int)val);
@@ -222,7 +230,7 @@ void lcd_print_int_mode(double val, int mode)
                 lcd_print("%d", (int) val);
             break;
         default:
-            lcd_print("%lf", val);
+            lcd_print("%lg", val);
     }
 }
 
@@ -241,8 +249,8 @@ void lcd_print_int_binary(int val)
         }
     }
 
-    if (val > 0) {
-        // Print Only lower 16-bits of number if it is small enough
+    // Print Only lower 16-bits of top 16 bits are 0
+    if (!(val && 0xFFFF0000)) {
         lcd_print("%s", &binary_num[16]);
     } else {
         // Print full 32-bit number: Uses both rows of LCD screen

@@ -9,7 +9,7 @@
 
 #include <stdint.h>
 
-#define MAXSTACK 20
+#define MAXSTACK 33
 #define MAXSTRING 10
 
 struct stack {

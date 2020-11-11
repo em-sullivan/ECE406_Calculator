@@ -17,7 +17,7 @@
 void system_clock_init(void);
 void LED_Init(void);
 
-#define BUFFER_SIZE 20
+#define BUFFER_SIZE 33
 
 /*
  * Entry Point
@@ -143,6 +143,7 @@ int main(void)
                     mode = 0;
                 break;
             case 'p':
+                /*
                 // Convert previous answer to string
                 sprintf(prev_ans, "%lf", res);
                 // Breaks if the string is too long to add to the buffer
@@ -160,9 +161,10 @@ int main(void)
                 // Reprint result
                 lcd_clear();
                 lcd_print("%s", exp_start);
-
+                */
             case 255:
                 break;
+            
             default:
                 // Checks if expression is longer then char limit of LCD screen
                 if ((exp_p - exp_buffer > 15) && (exp_p - exp_buffer < (BUFFER_SIZE - 1))) {

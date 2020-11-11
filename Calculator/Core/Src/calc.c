@@ -18,7 +18,7 @@ int eval_postfix(char *exp, double *ans)
     char temp[20];
     struct stack *st;
     int negative = 0;
-
+    
     st = init_stack(MAXSTACK);
     if (st == NULL) {
         printf("Could not create struct!\n");
@@ -226,46 +226,4 @@ int infix_to_postfix(char *inexp, char *postexp)
     *postfixp = '\0';
     free_stack(st);
     return 0;
-}
-
-/*
- * These functions will not be used in the final
- * version of the project, they are here for
- * testing purposes
- */
-void print_binary(int val)
-{
-    int i;
-    int leading_zero = 0;
-    unsigned int mask = 0x80000000;
-
-    for (i = 0; i < 32; i++) {
-        if (val & (mask >> i)) {
-            printf("1");
-            leading_zero = 1;
-        } else {
-            if (leading_zero)
-                printf("0");
-        }    
-    }
-
-    printf("\n");
-}
-
-void print_mode(int val, int mode)
-{
-    switch(mode) {
-            case BIN:
-            print_binary(val);
-            break;
-        case OCT:
-            printf("%o\n", val);
-            break;
-        case HEX:
-            printf("%X\n", val);
-            break;
-        case DEC:
-        default:
-            printf("%d\n", val);
-    }
 }
