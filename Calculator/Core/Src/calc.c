@@ -110,6 +110,9 @@ double express(char op, double n1, double n2)
         case '/':
             ans = n2 / n1;
             break;
+        case '%':
+            ans = (int)n2 % (int)n1;
+            break;
         case '&':
             ans = (int)n1 & (int)n2;
             break;
@@ -150,6 +153,7 @@ int precd(char op)
             return 5;
         case '*':
         case '/':
+        case '%':
             return 6;
         default: break;
     }

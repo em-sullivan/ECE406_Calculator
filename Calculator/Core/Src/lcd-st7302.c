@@ -234,6 +234,7 @@ void lcd_print_int_mode(double val, int mode)
     }
 }
 
+
 void lcd_print_int_binary(int val)
 {
     uint8_t mask_shift;

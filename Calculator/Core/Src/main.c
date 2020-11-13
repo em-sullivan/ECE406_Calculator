@@ -13,7 +13,6 @@
 #include "keypad.h"
 #include "calc.h"
 
-/* Private function prototypes -----------------------------------------------*/
 void system_clock_init(void);
 void LED_Init(void);
 
@@ -119,6 +118,7 @@ int main(void)
                     lcd_print("SYNTAX!");
                     ans = 1;
                     res = 0;
+
                 } else {
                     // Print answer on next line of LCD screen
                     lcd_set_cursor(0, 1);
@@ -142,6 +142,9 @@ int main(void)
                 if (mode > 4)
                     mode = 0;
                 break;
+            case 'l':
+                // Toggle backlight for LCD
+                HAL_GPIO_TogglePin(GPIOC, BACKLIGHT_GPIO);
             case 'p':
                 /*
                 // Convert previous answer to string

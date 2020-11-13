@@ -26,6 +26,9 @@ void init_keypad_pins()
     for(i = 0; i < KEYPAD_ROW_SIZE; i++)
         gpio_row.Pin |= keypad_rows[i];
 
+    // Set pin to control backlight
+    gpio_row.Pin |= BACKLIGHT_GPIO;
+
     // Configure row pins to be digital output
     gpio_row.Mode = GPIO_MODE_OUTPUT_PP;
     gpio_row.Pull = GPIO_NOPULL;
@@ -38,7 +41,7 @@ void init_keypad_pins()
 
     // Configure col pins to be digital input
     gpio_col.Mode = GPIO_MODE_INPUT;
-    gpio_col.Pull = GPIO_NOPULL;
+    gpio_col.Pull = GPIO_PULLUP;
     gpio_row.Speed = GPIO_SPEED_FREQ_HIGH;
 
     __GPIOC_CLK_ENABLE();
@@ -88,14 +91,14 @@ uint8_t map_key(uint8_t key, uint8_t func)
     // Map of keys for keypad
     uint8_t mapped_keys[2][24] = {
     {'s', 'm', 'd', 'c',
-    'p', '(', ')', '/',
+    'l', '(', ')', '/',
     '1', '2', '3', '+',
     '4', '5', '6', '-',
     '7', '8', '9', '*',
     '.', '0', '_', '='},
     // Keymap 2 has bit operators
-    {'s', 'b', 'd', 'c',
-    'o', 'x', 'r', 'l', 
+    {'s', 'm', 'd', 'c',
+    'o', 'x', 'b', '%', 
     '1', '2', '3', '&',
     '4', '5', '6', '|',
     '7', '8', '9', '^',

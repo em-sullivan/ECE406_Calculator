@@ -14,6 +14,7 @@
 #define KEYPAD_ROW_SIZE 6
 #define KEYPAD_COL_SIZE 4
 
+#define BACKLIGHT_GPIO GPIO_PIN_11
 
 void init_keypad_pins();
 uint8_t keypad_scan();
