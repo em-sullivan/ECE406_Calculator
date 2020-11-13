@@ -27,7 +27,6 @@ int main(void)
     uint8_t mode, ans;
     char exp_buffer[BUFFER_SIZE]; // Input expression buffer
     char post_fix[BUFFER_SIZE]; // Postfix expression buffer
-    char prev_ans[BUFFER_SIZE];
     char *exp_p; // Expression pointer
     char *exp_start;
     double res;
@@ -56,8 +55,8 @@ int main(void)
 
     // Set current map 0 and output mode to DEC
     map = 0;
-    ans = 0; // When ans is
-    mode  = 3;
+    ans = 0;
+    mode  = DEC; // Start at integer math 
 
     while (1) {
       
@@ -65,7 +64,9 @@ int main(void)
         key = read_key();
 
         // Clear screen and expression buffer after writing new problem
-        if (ans && key != 255) {
+        // Does not clear screen if no key is pressed or key is backlight
+        // control
+        if ((ans && key != 255) && (ans && key != 'l')) {
             lcd_clear();
             memset(exp_buffer, 0, sizeof(exp_buffer));
             exp_p = exp_buffer;
@@ -145,26 +146,7 @@ int main(void)
             case 'l':
                 // Toggle backlight for LCD
                 HAL_GPIO_TogglePin(GPIOC, BACKLIGHT_GPIO);
-            case 'p':
-                /*
-                // Convert previous answer to string
-                sprintf(prev_ans, "%lf", res);
-                // Breaks if the string is too long to add to the buffer
-                if (strlen(prev_ans) + strlen(exp_buffer) > BUFFER_SIZE)
-                    break;
-
-                // Concat number to buffer
-                strcat(exp_p, prev_ans);
-                exp_p = exp_p + strlen(prev_ans);
-
-                // Adjust starting pointer
-                while (exp_p - exp_start > 14)
-                    exp_start++;
-
-                // Reprint result
-                lcd_clear();
-                lcd_print("%s", exp_start);
-                */
+          
             case 255:
                 break;
             
@@ -179,8 +161,21 @@ int main(void)
                 }
 
                 if (exp_p - exp_buffer < (BUFFER_SIZE - 1)) {
-                    // Write char to screen, save it to expression buffer
-                    lcd_write_char(key);
+
+                    // For special characters
+                    if (key == '<')
+                        lcd_write_char(0xFB);
+                    else if (key == '>')
+                        lcd_write_char(0xFC);
+                    
+                    // NOTE: NEED to add cutsom char to negative
+                    else if (key == '_')
+                        lcd_write_char(0x2D);
+                    else
+                        // Write char normally
+                        lcd_write_char(key);
+                    
+                    // Save key to expression buffer
                     *exp_p = key;
                     
                     // Move to next char of buffer

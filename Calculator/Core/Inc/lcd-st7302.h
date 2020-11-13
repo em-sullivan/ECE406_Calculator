@@ -85,6 +85,12 @@
 #define SCL_PIN             GPIO_PIN_9
 #define SDA_PIN             GPIO_PIN_10
 
+/* Modes to print values in */
+enum modes { 
+    OCT, HEX, BIN, DEC, FLOAT
+};
+
+
 /*
  * Init pins for i2c
  */

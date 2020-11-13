@@ -206,24 +206,24 @@ void lcd_clear()
 void lcd_print_int_mode(double val, int mode)
 {
     switch(mode) {
-        case 0:
+        case OCT:
             if (val > 2147483647.0)
                 lcd_print("%o", (unsigned int)val);
             else 
                 lcd_print("%o", (int)val);
             break;
-        case 1:
+        case HEX:
             if (val > 2147483647.0)
                 lcd_print("%X", (unsigned int)val);
             else 
                 lcd_print("%X", (int)val);
             break;
-        case 2:
+        case BIN:
             if (val > 2147483647.0)
                 lcd_print_int_binary((unsigned int)val);
             else
                 lcd_print_int_binary((int)val);
-        case 3:
+        case DEC:
             if (val > 2147483647.0)
                 lcd_print("%u", (unsigned int)val);
             else 

@@ -9,13 +9,6 @@
 
 #include <stdint.h>
 
-enum modes {
-    DEC = 3,
-    BIN = 2,
-    HEX = 1,
-    OCT = 0
-};
-
 int eval_postfix(char *expression, double *ans);
 double express(char op, double n1,double n2);
 int precd(char op);
