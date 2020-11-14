@@ -123,6 +123,8 @@ void lcd_write_char(uint8_t c);
  */
 void lcd_print(char *string, ...);
 
+void lcd_custom_char(uint8_t *custom_char, uint8_t address);
+
 /*
  * Shift LCD cursor to the right (if dir is poistive)
  * or left (if dir is negative)

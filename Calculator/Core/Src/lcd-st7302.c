@@ -16,6 +16,17 @@
 
 static I2C_HandleTypeDef lcd_handler;
 
+uint8_t negative[8] = {
+    0b00000000,
+    0b00000000,
+    0b00000000,
+    0b00001110,
+    0b00000000,
+    0b00000000,
+    0b00000000,
+    0b00000000
+};
+
 void lcd_init_i2c_pins()
 {
     GPIO_InitTypeDef i2c_pins;
@@ -102,6 +113,9 @@ void lcd_init()
     // Clear screen and set cursor to home
     lcd_command(LCD_CLEAR);
     lcd_command(LCD_HOME);
+
+    // Load custom characters
+    lcd_custom_char(negative, 0x00);
 }
 
 void lcd_command(uint8_t byte)
@@ -148,6 +162,24 @@ void lcd_print(char *string, ...)
             break;
         lcd_write_char(new_string[i]);
     }
+}
+
+void lcd_custom_char(uint8_t *custom_char, uint8_t address)
+{
+    uint8_t i;
+
+    // Send command to modify CG-RAM
+    lcd_command(LCD_CGRAM | address);
+    udelay(4);
+
+    for (i = 0; i < 8; i++) {
+        lcd_write_char(custom_char[i]);
+    }
+
+    // Go back to display RAM
+    lcd_command(LCD_SET_DDRAM);
+
+
 }
 
 void lcd_shift(int8_t dir)

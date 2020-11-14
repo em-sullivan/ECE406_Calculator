@@ -170,7 +170,7 @@ int main(void)
                     
                     // NOTE: NEED to add cutsom char to negative
                     else if (key == '_')
-                        lcd_write_char(0x2D);
+                        lcd_write_char(0x00);
                     else
                         // Write char normally
                         lcd_write_char(key);
