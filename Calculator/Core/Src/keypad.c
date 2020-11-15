@@ -172,4 +172,3 @@ uint8_t read_key()
 
     return last_read;
 }
-

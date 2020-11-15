@@ -283,7 +283,7 @@ void lcd_print_int_binary(int val)
     }
 
     // Print Only lower 16-bits of top 16 bits are 0
-    if (!(val && 0xFFFF0000)) {
+    if ((val & 0xFFFF0000) == 0) {
         lcd_print("%s", &binary_num[16]);
     } else {
         // Print full 32-bit number: Uses both rows of LCD screen
