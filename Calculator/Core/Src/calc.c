@@ -54,8 +54,9 @@ int eval_postfix(char *exp, double *ans)
             strcpy(temp, "");
             negative = 0;
             
-        // Makes number negative
-        } else if (*cp == '_') {
+        // Makes number negative, needs to have character at beginning
+        // of string
+        } else if (*cp == '_' && (cp-exp == 0)) {
             negative ^= 1;
         // Performs operation and stores back into stack
         } else {
