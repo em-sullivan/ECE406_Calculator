@@ -51,10 +51,26 @@ void init_keypad_pins()
 
 uint8_t keypad_scan()
 {
-    uint8_t row, col;
+    uint8_t row, col, i;
+    GPIO_InitTypeDef output = {0};
+    GPIO_InitTypeDef input = {0};
 
-    // Set output rows to 0
-    GPIOC->ODR &= ~(keypad_rows[0] | keypad_rows[1] | keypad_rows[2] | keypad_rows[3] | keypad_rows[4] | keypad_rows[5]);
+    // For setting rows as outputs
+    output.Mode = GPIO_MODE_OUTPUT_PP;
+    output.Pull = GPIO_NOPULL;
+    output.Speed = GPIO_SPEED_FREQ_HIGH;
+
+    // For setting rows as inputs
+    input.Mode = GPIO_MODE_INPUT;
+    input.Pull = GPIO_NOPULL;
+    input.Speed = GPIO_SPEED_FREQ_HIGH;
+
+    // Set All rows as outputs
+    output.Pin = 0;
+    for (i = 0; i < KEYPAD_ROW_SIZE; i++) {
+        output.Pin |= keypad_rows[i];
+    }
+    HAL_GPIO_Init(GPIOC, &output);
 
     // Read to see if and input is high
     if ((GPIOC->IDR & (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3])) == (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3]))
@@ -66,9 +82,18 @@ uint8_t keypad_scan()
     // Cycles through the rows
     for (row = 0; row < KEYPAD_ROW_SIZE; row++) {
         
-        // Sets current row to 0, all other rows are high
-        GPIOC->ODR |= (keypad_rows[0] | keypad_rows[1] | keypad_rows[2] | keypad_rows[3] | keypad_rows[4] | keypad_rows[5]);
-        GPIOC->ODR &= ~(keypad_rows[row]);
+        // Sets current row to output, all other rows are inputs
+        output.Pin = 0;
+        input.Pin = 0;
+        for (i = 0; i < KEYPAD_ROW_SIZE; i++) {
+            // Sets row being checked to output
+            if (i == row)
+                output.Pin |= keypad_rows[i];
+            else
+                input.Pin |= keypad_rows[i];
+        }
+        HAL_GPIO_Init(GPIOC, &output);
+        HAL_GPIO_Init(GPIOC, &input);
         udelay(40);
 
         // Checks if an input is being read (if and col pin is low)
