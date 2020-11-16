@@ -138,7 +138,7 @@ uint8_t map_key(uint8_t key, uint8_t func)
     // If input key is out of range, return max value
     // else return mapped key
     if (key > 23)
-       return 255;
+        return 255;
     else
         return mapped_keys[func][key];
 }
@@ -161,9 +161,9 @@ uint8_t read_key()
     while (count < 5) {
         current_read = keypad_scan();
     	    if (current_read == last_read) {
-    		      count++;
+                count++;
           } else {
-        	    count = 0;
+                count = 0;
         }
     	
         last_read = current_read;
