@@ -10,6 +10,7 @@
 #include <ctype.h>
 #include "stack.h"
 #include "calc.h"
+#include "lcd-st7302.h"
 
 int eval_postfix(char *exp, double *ans)
 {
@@ -33,7 +34,8 @@ int eval_postfix(char *exp, double *ans)
     while (*cp != '\0') {
         // Checks if value in string is a number, adds
         // digit to temp string
-        if (isdigit(*cp) || *cp == '.' || *cp == 'o' || *cp == 'b' || *cp == 'x') {
+        //if (isdigit(*cp) || *cp == '.' || *cp == 'o' || *cp == 'b' || *cp == 'x') {
+        if (is_char_in_list("0123456789.ABCDEFobx", *cp)) {
             strncat(temp, cp, 1);
         
         // Stores number into stack 
@@ -44,6 +46,7 @@ int eval_postfix(char *exp, double *ans)
                 free_stack(st);
                 return 5;
             }
+
             if (negative)
                 num1 *= -1.0;
             
@@ -172,6 +175,7 @@ int infix_to_postfix(char *inexp, char *postexp)
     struct stack *st;
     char *infixp;
     char *postfixp;
+    char key[] = "0123456789_.ABCDEFobx";
     
     // Init stack
     st = init_stack(MAXSTACK);
@@ -185,7 +189,8 @@ int infix_to_postfix(char *inexp, char *postexp)
     postfixp = postexp;
 
     while(*infixp != '\0') {
-        if (isdigit(*infixp) || *infixp == '_' || *infixp == '.' || *infixp == 'o' || *infixp == 'b' || *infixp == 'x') {
+        //if (isdigit(*infixp) || *infixp == '_' || *infixp == '.' || *infixp == 'o' || *infixp == 'b' || *infixp == 'x') {
+        if (is_char_in_list(key, *infixp)) {
             *postfixp = *infixp;
             postfixp++;
         
@@ -221,7 +226,7 @@ int infix_to_postfix(char *inexp, char *postexp)
         infixp++;
 
         // Adds commas to seperate values
-        if ((!(isdigit(*infixp)) && *infixp != '.') && isdigit(*(infixp-1))) {
+        if ((!(is_char_in_list(key,*infixp)) && *infixp != '.') && is_char_in_list(key,*(infixp - 1))) {
             *postfixp = ',';
             postfixp++;
         }
@@ -238,9 +243,23 @@ int infix_to_postfix(char *inexp, char *postexp)
     return 0;
 }
 
+int is_char_in_list(char *list, char c)
+{
+    char *curr;
+    
+    // Checks to see if char c is part of the list
+    // of chars given
+    for (curr = list; *curr != 0; curr++) {
+        if (*curr == c)
+            return 1;
+    }
+
+    return 0;
+}
+
 int convert_string(char *string, double *val)
 {
-    char *error_nums = "23456789ABCDEFobx._";
+    char *error_nums = "23456789ABCDEFobx_.";
     char start;
     int index, exp_len, ex;
 
@@ -253,7 +272,7 @@ int convert_string(char *string, double *val)
             // Checks to see if there are incorrect chars in octal
             // or if it is too long (can't represent a 32-bit value)
             index = strcspn(string + 1, error_nums + 6);
-            if (index + 1 < exp_len || exp_len > 12) {
+            if (index + 1 < exp_len || exp_len > 12 || exp_len < 2) {
                 return -1;
             }
 
@@ -265,8 +284,8 @@ int convert_string(char *string, double *val)
         case 'x':
             // Checks to see if there are inccorect chars in hex
             // or if its too long
-            index = strcspn(string + 1, error_nums + 13);
-            if (index + 1 < exp_len || exp_len > 9) {
+            index = strcspn(string + 1, "obx_.");
+            if (index + 1 < exp_len || exp_len > 9 || exp_len < 2) {
                 return -2;
             }
             // Convert HEX string to store in int
@@ -278,7 +297,7 @@ int convert_string(char *string, double *val)
             // Chekcs to see if there are incorrect chars in binary
             // or if its too long
             index = strcspn(string + 1, error_nums);
-            if (index + 1 < exp_len || exp_len > 33) {
+            if (index + 1 < exp_len || exp_len > 33 || exp_len < 2) {
                 return -3;
             }
 
@@ -289,7 +308,7 @@ int convert_string(char *string, double *val)
         default:
 
             // Checks for incorrect chars
-            index = strcspn(string +1, error_nums + 7);
+            index = strcspn(string, "ABCDEFobx");
             if (index + 1 < exp_len) {
                 return -4;
             }

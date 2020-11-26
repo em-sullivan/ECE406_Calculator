@@ -119,10 +119,10 @@ uint8_t map_key(uint8_t key, uint8_t func)
     '.', '0', '_', '='},
     // Keymap 2 has bit operators
     {'s', 'm', 'd', 'c',
-    'o', 'x', 'b', '%', 
-    '1', '2', '3', '&',
-    '4', '5', '6', '|',
-    '7', '8', '9', '^',
+    'l', '(', ')', '%', 
+    'o', 'x', 'b', '&',
+    'A', 'B', 'C', '|',
+    'D', 'E', 'F', '^',
     '<', '0', '>', '='}};
 
     // When func is greater then 0 it chooses the 2nd
