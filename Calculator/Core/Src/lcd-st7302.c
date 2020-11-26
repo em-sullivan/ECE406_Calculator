@@ -14,7 +14,7 @@
 #include "lcd-st7302.h"
 #include "timer.h"
 
-static I2C_HandleTypeDef lcd_handler;
+static I2C_HandleTypeDef lcd_handler = {0};
 
 uint8_t negative[8] = {
     0b00000000,

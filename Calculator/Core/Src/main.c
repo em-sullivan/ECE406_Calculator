@@ -119,7 +119,14 @@ int main(void)
                     lcd_print("SYNTAX!");
                     ans = 1;
                     res = 0;
-
+                } else if (res > 4294967295 || res < -2147483647) {
+                    // If answer is out of range, print error to screen
+                    lcd_clear();
+                    lcd_print("ANSWER OUT");
+                    lcd_set_cursor(0, 1);
+                    lcd_print("OF RANGE!");
+                    ans = 1;
+                    res = 0;
                 } else {
                     // Print answer on next line of LCD screen
                     lcd_set_cursor(0, 1);

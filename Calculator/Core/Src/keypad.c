@@ -17,22 +17,17 @@ uint16_t keypad_cols[] = {GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_3};
 
 void init_keypad_pins()
 {
-    GPIO_InitTypeDef gpio_row;
+    GPIO_InitTypeDef gpio_backlight;
     GPIO_InitTypeDef gpio_col;
     uint8_t i;
 
-    // Set pins to be rows
-    gpio_row.Pin = 0;
-    for(i = 0; i < KEYPAD_ROW_SIZE; i++)
-        gpio_row.Pin |= keypad_rows[i];
-
     // Set pin to control backlight
-    gpio_row.Pin |= BACKLIGHT_GPIO;
+    gpio_backlight.Pin = BACKLIGHT_GPIO;
 
     // Configure row pins to be digital output
-    gpio_row.Mode = GPIO_MODE_OUTPUT_PP;
-    gpio_row.Pull = GPIO_NOPULL;
-    gpio_row.Speed = GPIO_SPEED_FREQ_HIGH;
+    gpio_backlight.Mode = GPIO_MODE_OUTPUT_PP;
+    gpio_backlight.Pull = GPIO_NOPULL;
+    gpio_backlight.Speed = GPIO_SPEED_FREQ_HIGH;
 
     // Set pins to be cols
     gpio_col.Pin = 0;
@@ -42,10 +37,11 @@ void init_keypad_pins()
     // Configure col pins to be digital input
     gpio_col.Mode = GPIO_MODE_INPUT;
     gpio_col.Pull = GPIO_PULLUP;
-    gpio_row.Speed = GPIO_SPEED_FREQ_HIGH;
+    gpio_col.Speed = GPIO_SPEED_FREQ_HIGH;
 
+    // Enable clock, and pins for columns and backlight
     __GPIOC_CLK_ENABLE();
-    HAL_GPIO_Init(GPIOC, &gpio_row);
+    HAL_GPIO_Init(GPIOC, &gpio_backlight);
     HAL_GPIO_Init(GPIOC, &gpio_col);
 }
 

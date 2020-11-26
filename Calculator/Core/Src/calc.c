@@ -33,12 +33,17 @@ int eval_postfix(char *exp, double *ans)
     while (*cp != '\0') {
         // Checks if value in string is a number, adds
         // digit to temp string
-        if (isdigit(*cp) || *cp == '.') {
+        if (isdigit(*cp) || *cp == '.' || *cp == 'o' || *cp == 'b' || *cp == 'x') {
             strncat(temp, cp, 1);
         
         // Stores number into stack 
         } else if (*cp == ',') {
-            num1 = strtod(temp, NULL);
+            // Converts string into double value, returns
+            // error if string is invalid
+            if (convert_string(temp, &num1) < 0) {
+                free_stack(st);
+                return 5;
+            }
             if (negative)
                 num1 *= -1.0;
             
@@ -180,7 +185,7 @@ int infix_to_postfix(char *inexp, char *postexp)
     postfixp = postexp;
 
     while(*infixp != '\0') {
-        if (isdigit(*infixp) || *infixp == '_' || *infixp == '.') {
+        if (isdigit(*infixp) || *infixp == '_' || *infixp == '.' || *infixp == 'o' || *infixp == 'b' || *infixp == 'x') {
             *postfixp = *infixp;
             postfixp++;
         
@@ -230,5 +235,62 @@ int infix_to_postfix(char *inexp, char *postexp)
     
     *postfixp = '\0';
     free_stack(st);
+    return 0;
+}
+
+int convert_string(char *string, double *val)
+{
+    char *error_nums = "23456789obx._";
+    char start;
+    int index, exp_len, ex;
+
+    // Look at first character and find expression length
+    start = *string;
+    exp_len = strlen(string);
+
+    switch(start) {
+        case 'o':
+            // Checks to see if there are incorrect chars in octal
+            // or if it is too long (can't represent a 32-bit value)
+            index = strcspn(string + 1, error_nums + 6);
+            if (index + 1 < exp_len || exp_len > 12) {
+                return -1;
+            }
+
+            // Convert Octal string to store in integer (double)
+            ex = strtoul(string + 1, NULL, 8);
+            *val = (signed)ex;
+            break;
+
+        case 'x':
+            // Checks to see if there are inccorect chars in hex
+            // or if its too long
+            index = strcspn(string + 1, error_nums + 8);
+            if (index + 1 < exp_len || exp_len > 9) {
+                return -2;
+            }
+            // Convert HEX string to store in int
+            ex = strtoul(string + 1, NULL, 16);
+            *val = (signed)ex;
+            break;
+
+        case 'b':
+            // Chekcs to see if there are incorrect chars in binary
+            // or if its too long
+            index = strcspn(string + 1, error_nums);
+            if (index + 1 < exp_len || exp_len > 33) {
+                return -3;
+            }
+
+            // Convert binary value to store in int
+            ex = strtoul(string + 1, NULL, 2);
+            *val = (signed)ex;
+            break; 
+        default:
+
+            // Convert string to double
+            *val = strtod(string, NULL);
+    }
+
     return 0;
 }

@@ -123,6 +123,11 @@ void lcd_write_char(uint8_t c);
  */
 void lcd_print(char *string, ...);
 
+/*
+ * Load a custom character to CD-RAM, custom char is a
+ * 8 by 8 char array, and address is the CD-RAM address to store
+ * the custom character in.
+ */
 void lcd_custom_char(uint8_t *custom_char, uint8_t address);
 
 /*

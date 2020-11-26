@@ -14,5 +14,6 @@ double express(char op, double n1,double n2);
 int precd(char op);
 int infix_to_postfix(char *inexp, char *postexp);
 void print_binary(int val);
+int convert_string(char *string, double *val);
 
 #endif //CALC_H
