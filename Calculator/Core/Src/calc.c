@@ -240,7 +240,7 @@ int infix_to_postfix(char *inexp, char *postexp)
 
 int convert_string(char *string, double *val)
 {
-    char *error_nums = "23456789obx._";
+    char *error_nums = "23456789ABCDEFobx._";
     char start;
     int index, exp_len, ex;
 
@@ -265,7 +265,7 @@ int convert_string(char *string, double *val)
         case 'x':
             // Checks to see if there are inccorect chars in hex
             // or if its too long
-            index = strcspn(string + 1, error_nums + 8);
+            index = strcspn(string + 1, error_nums + 13);
             if (index + 1 < exp_len || exp_len > 9) {
                 return -2;
             }
@@ -288,7 +288,12 @@ int convert_string(char *string, double *val)
             break; 
         default:
 
-            // Convert string to double
+            // Checks for incorrect chars
+            index = strcspn(string +1, error_nums + 7);
+            if (index + 1 < exp_len) {
+                return -4;
+            }
+            // Converts dec value to double
             *val = strtod(string, NULL);
     }
 
