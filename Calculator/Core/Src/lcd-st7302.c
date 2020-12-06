@@ -47,7 +47,10 @@ void lcd_init_i2c()
 {
      // I2C configuration
     lcd_handler.Instance = I2C1;
-    lcd_handler.Init.Timing = 0x00702991;
+    lcd_handler.Init.Timing = 0x00702991; // 80 MHz
+    // lcd_handler.Init.Timing = 0x00300F38; // 32 MHz
+    // lcd_handler.Init.Timing = 0x00303D5B;
+    lcd_handler.Init.Timing = 0x2000090E;
     lcd_handler.Init.OwnAddress1 = 0;
     lcd_handler.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
     lcd_handler.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED;
