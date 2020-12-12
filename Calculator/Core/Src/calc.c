@@ -34,7 +34,6 @@ int eval_postfix(char *exp, double *ans)
     while (*cp != '\0') {
         // Checks if value in string is a number, adds
         // digit to temp string
-        //if (isdigit(*cp) || *cp == '.' || *cp == 'o' || *cp == 'b' || *cp == 'x') {
         if (is_char_in_list("0123456789.ABCDEFobx", *cp)) {
             strncat(temp, cp, 1);
         
@@ -135,7 +134,7 @@ double express(char op, double n1, double n2)
             ans = (int)n2 << (int)n1;
             break;
         case '>':
-            ans = (int)n2 >> (int)n1;
+            ans = (signed int)n2 >> (int)n1;
             break;
         default:
             ans = 0; 
@@ -189,7 +188,7 @@ int infix_to_postfix(char *inexp, char *postexp)
     postfixp = postexp;
 
     while(*infixp != '\0') {
-        //if (isdigit(*infixp) || *infixp == '_' || *infixp == '.' || *infixp == 'o' || *infixp == 'b' || *infixp == 'x') {
+        // Checks if char is digit/hexvalue/period
         if (is_char_in_list(key, *infixp)) {
             *postfixp = *infixp;
             postfixp++;
@@ -259,7 +258,6 @@ int is_char_in_list(char *list, char c)
 
 int convert_string(char *string, double *val)
 {
-    char *error_nums = "23456789ABCDEFobx_.";
     char start;
     int index, exp_len, ex;
 
@@ -271,7 +269,7 @@ int convert_string(char *string, double *val)
         case 'o':
             // Checks to see if there are incorrect chars in octal
             // or if it is too long (can't represent a 32-bit value)
-            index = strcspn(string + 1, error_nums + 6);
+            index = strcspn(string + 1, "89ABCDEFobx_.");
             if (index + 1 < exp_len || exp_len > 12 || exp_len < 2) {
                 return -1;
             }
@@ -296,7 +294,7 @@ int convert_string(char *string, double *val)
         case 'b':
             // Chekcs to see if there are incorrect chars in binary
             // or if its too long
-            index = strcspn(string + 1, error_nums);
+            index = strcspn(string + 1, "23456789ABCDEFobx_.");
             if (index + 1 < exp_len || exp_len > 33 || exp_len < 2) {
                 return -3;
             }

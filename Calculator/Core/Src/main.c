@@ -57,7 +57,7 @@ int main(void)
     map = 0;
     ans = 0;
     mode = DEC; // Start at integer math 
-
+    
     while (1) {
       
         // Read key
@@ -192,6 +192,7 @@ int main(void)
                 }
         }
 
+        // Short delay if a key is being pressed
         if (key != 255)
             mdelay(400);
     }
