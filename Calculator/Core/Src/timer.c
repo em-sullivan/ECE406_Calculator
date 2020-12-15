@@ -9,10 +9,11 @@
 #include "timer.h"
 
 static TIM_HandleTypeDef tim_handle;
-volatile static uint32_t timer_ticks;
 
 void timer_init(void)
 {
+    uint32_t timer_ticks;
+
     timer_ticks = (HAL_RCC_GetHCLKFreq() / 1000000);
     TIM_ClockConfigTypeDef clk = {0};
     TIM_MasterConfigTypeDef mst = {0};

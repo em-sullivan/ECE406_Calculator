@@ -19,7 +19,7 @@ void init_keypad_pins()
 {
     GPIO_InitTypeDef gpio_backlight;
     GPIO_InitTypeDef gpio_col;
-    uint8_t i;
+    uint8_t pin;
 
     // Set pin to control backlight
     gpio_backlight.Pin = BACKLIGHT_GPIO;
@@ -31,8 +31,8 @@ void init_keypad_pins()
 
     // Set pins to be cols
     gpio_col.Pin = 0;
-    for (i = 0; i < KEYPAD_COL_SIZE; i++)
-        gpio_col.Pin |= keypad_cols[i];
+    for (pin = 0; pin < KEYPAD_COL_SIZE; pin++)
+        gpio_col.Pin |= keypad_cols[pin];
 
     // Configure col pins to be digital input
     gpio_col.Mode = GPIO_MODE_INPUT;
@@ -47,7 +47,7 @@ void init_keypad_pins()
 
 uint8_t keypad_scan()
 {
-    uint8_t row, col, i;
+    uint8_t row, col, pin;
     GPIO_InitTypeDef output = {0};
     GPIO_InitTypeDef input = {0};
 
@@ -63,8 +63,8 @@ uint8_t keypad_scan()
 
     // Set All rows as outputs
     output.Pin = 0;
-    for (i = 0; i < KEYPAD_ROW_SIZE; i++) {
-        output.Pin |= keypad_rows[i];
+    for (pin = 0; pin < KEYPAD_ROW_SIZE; pin++) {
+        output.Pin |= keypad_rows[pin];
     }
     HAL_GPIO_Init(GPIOC, &output);
 
@@ -81,12 +81,12 @@ uint8_t keypad_scan()
         // Sets current row to output, all other rows are inputs
         output.Pin = 0;
         input.Pin = 0;
-        for (i = 0; i < KEYPAD_ROW_SIZE; i++) {
+        for (pin = 0; pin < KEYPAD_ROW_SIZE; pin++) {
             // Sets row being checked to output
-            if (i == row)
-                output.Pin |= keypad_rows[i];
+            if (pin == row)
+                output.Pin |= keypad_rows[pin];
             else
-                input.Pin |= keypad_rows[i];
+                input.Pin |= keypad_rows[pin];
         }
         HAL_GPIO_Init(GPIOC, &output);
         HAL_GPIO_Init(GPIOC, &input);

@@ -38,9 +38,6 @@ int precd(char op);
  */
 int infix_to_postfix(char *inexp, char *postexp);
 
-
-void print_binary(int val);
-
 /*
  * Checks to see if the currenct passed char c is contatined in the string
  * passed as key. If it is, return 1 else return 0

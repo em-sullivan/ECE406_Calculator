@@ -146,7 +146,7 @@ void lcd_print(char *string, ...)
 {
     char new_string[17];
     va_list args;
-    uint8_t i;
+    uint8_t curr_char;
 
     // Handles add arguments, used
     // for printings values as dec, hex, oct
@@ -156,24 +156,24 @@ void lcd_print(char *string, ...)
 
     // Prints up to 16 chars or unitl null char
     // is reached
-    for (i = 0; i < 16; i++) {
+    for (curr_char = 0; curr_char < 16; curr_char++) {
         // Stops printing if NULL char is reached
-        if (new_string[i] == 0)
+        if (new_string[curr_char] == 0)
             break;
-        lcd_write_char(new_string[i]);
+        lcd_write_char(new_string[curr_char]);
     }
 }
 
 void lcd_custom_char(uint8_t *custom_char, uint8_t address)
 {
-    uint8_t i;
+    uint8_t byte;
 
     // Send command to modify CG-RAM
     lcd_command(LCD_CGRAM | address);
     udelay(4);
 
-    for (i = 0; i < 8; i++) {
-        lcd_write_char(custom_char[i]);
+    for (byte = 0; byte < 8; byte++) {
+        lcd_write_char(custom_char[byte]);
     }
 
     // Go back to display RAM

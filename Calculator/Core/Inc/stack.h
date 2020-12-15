@@ -9,9 +9,7 @@
 
 #include <stdint.h>
 
-#define MAXSTACK 33
-#define MAXSTRING 10
-
+#define MAXSTACK 34
 struct stack {
     uint32_t maxsize;
     int32_t top;

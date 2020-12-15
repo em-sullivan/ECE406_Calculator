@@ -16,7 +16,7 @@
 void system_clock_init(void);
 void LED_Init(void);
 
-#define BUFFER_SIZE 33
+#define BUFFER_SIZE 34
 
 /*
  * Entry Point
