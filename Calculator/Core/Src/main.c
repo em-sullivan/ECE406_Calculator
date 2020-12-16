@@ -111,7 +111,7 @@ int main(void)
             case '=':
                 // Calculate expression and print answer on next line
                 infix_to_postfix(exp_buffer, post_fix);
-                if (eval_postfix(post_fix, &res) != 0) {
+                if (eval_postfix(post_fix, &res)) {
                     // If expression is invalid, print error message to screen
                     lcd_clear();
                     lcd_print("INVALID");
