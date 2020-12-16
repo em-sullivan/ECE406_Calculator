@@ -115,7 +115,7 @@ void lcd_command(uint8_t byte);
 /*
  * Print a character to the LCD screen
  */
-void lcd_write_char(uint8_t c);
+void lcd_write_char(uint8_t byte);
 
 /*
  * Print string to LCD screen. Prints where

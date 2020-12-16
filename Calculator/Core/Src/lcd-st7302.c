@@ -16,17 +16,6 @@
 
 static I2C_HandleTypeDef lcd_handler = {0};
 
-uint8_t negative[8] = {
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00001110,
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000
-};
-
 void lcd_init_i2c_pins()
 {
     GPIO_InitTypeDef i2c_pins;
@@ -67,6 +56,18 @@ void lcd_init_i2c()
 
 void lcd_init()
 {
+    // Custom char for special neagtive symbol
+    uint8_t negative[8] = {
+        0b00000000,
+        0b00000000,
+        0b00000000,
+        0b00001110,
+        0b00000000,
+        0b00000000,
+        0b00000000,
+        0b00000000
+    };
+    
     // Enable pins for I2C
     lcd_init_i2c_pins();
 
@@ -131,12 +132,12 @@ void lcd_command(uint8_t byte)
     udelay(500);
 }
 
-void lcd_write_char(uint8_t c)
+void lcd_write_char(uint8_t byte)
 {
     uint8_t buf[2];
 
     buf[0] = LCD_CONTROL_RS;
-    buf[1] = c;
+    buf[1] = byte;
 
     HAL_I2C_Master_Transmit(&lcd_handler, LCD_SLAVE, buf, 2, 1000);
     udelay(20);
@@ -237,6 +238,9 @@ void lcd_clear()
 
 void lcd_print_int_mode(double val, int mode)
 {
+    // Prints the double in its specific mode.
+    // If the value is greater then 2147483647, it is printed
+    // as an unsigned int, else its printeds as a signed int.
     switch(mode) {
         case OCT:
             if (val > 2147483647.0)

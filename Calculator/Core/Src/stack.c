@@ -55,6 +55,7 @@ int8_t push(struct stack *st, double val)
         return 1;
     }
 
+    // Push value to stack
     st->data[++st->top] = val;
     return 0;
 }
@@ -67,11 +68,14 @@ double pop(struct stack *st)
         return -1.0;
     }
 
+    // Pop value off of stack
     return st->data[st->top--];
 }
 
 double peek(struct stack *st)
 {
+    if (st->top < 0)
+        return 0.0;
     // Looks at the top of the stack
     return st->data[st->top];
 }

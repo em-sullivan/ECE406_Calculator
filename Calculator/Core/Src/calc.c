@@ -146,6 +146,7 @@ double express(char op, double n1, double n2)
 
 int precd(char op)
 {
+    // Return precedence of operator
     switch(op) {
         case '&':
             return 1;
@@ -214,29 +215,33 @@ int infix_to_postfix(char *inexp, char *postexp)
             }
 
         } else {
-            // Determines the order of operators (_, -, etc.)
+            // Detrimens if current operator has less precedence in operator
+            // in stack, if it does add it to postfix expression
             while(!stack_isempty(st) && precd(*infixp) <= precd(peek(st))) {
                 *postfixp = pop(st);
                 postfixp++;
             }
+            
+            // Adds operator to stack
             push(st, *infixp);
         }
         
         infixp++;
 
         // Adds commas to seperate values
-        if ((!(is_char_in_list(key,*infixp)) && *infixp != '.') && is_char_in_list(key,*(infixp - 1))) {
+        if (!(is_char_in_list(key, *infixp)) && is_char_in_list(key, *(infixp - 1))) {
             *postfixp = ',';
             postfixp++;
         }
     }
 
-    // Pop remaing chars on the stack
+    // Pop remaing operators off the stack
     while (!stack_isempty(st)) {
         *postfixp = pop(st);
         postfixp++;
     }
     
+    // Adds null char to end of string
     *postfixp = '\0';
     free_stack(st);
     return 0;

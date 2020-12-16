@@ -175,7 +175,7 @@ int main(void)
                     else if (key == '>')
                         lcd_write_char(0xFC);
                     
-                    // NOTE: NEED to add cutsom char to negative
+                    // Loads custom char for negative
                     else if (key == '_')
                         lcd_write_char(0x00);
                     else
