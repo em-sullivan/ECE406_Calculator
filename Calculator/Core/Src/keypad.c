@@ -26,7 +26,7 @@ void init_keypad_pins()
 
     // Configure row pins to be digital output
     gpio_backlight.Mode = GPIO_MODE_OUTPUT_PP;
-    gpio_backlight.Pull = GPIO_NOPULL;
+    gpio_backlight.Pull = GPIO_NOPULL; // Uses external pull-up resistors
     gpio_backlight.Speed = GPIO_SPEED_FREQ_HIGH;
 
     // Set pins to be cols

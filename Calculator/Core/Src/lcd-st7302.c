@@ -23,7 +23,7 @@ void lcd_init_i2c_pins()
     // Configures pins for i2c - alternate function
     i2c_pins.Pin = SDA_PIN | SCL_PIN;
     i2c_pins.Mode = GPIO_MODE_AF_OD;
-    i2c_pins.Pull = GPIO_NOPULL;
+    i2c_pins.Pull = GPIO_NOPULL; // Uses external pull_up resistors
     i2c_pins.Speed = GPIO_SPEED_FREQ_HIGH;
     i2c_pins.Alternate = GPIO_AF4_I2C1;
 
@@ -130,7 +130,7 @@ void lcd_command(uint8_t byte)
 
     // Transmit data
     HAL_I2C_Master_Transmit(&lcd_handler, LCD_SLAVE, buf, 2, 1000);
-    udelay(500);
+    udelay(50);
 }
 
 void lcd_write_char(uint8_t byte)
