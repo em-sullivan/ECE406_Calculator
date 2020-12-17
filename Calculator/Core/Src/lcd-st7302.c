@@ -27,7 +27,7 @@ void lcd_init_i2c_pins()
     i2c_pins.Speed = GPIO_SPEED_FREQ_HIGH;
     i2c_pins.Alternate = GPIO_AF4_I2C1;
 
-    // Enables GPIOB clock and pins
+    // Enables GPIOA clock and pins
     __GPIOA_CLK_ENABLE();
     HAL_GPIO_Init(GPIOA, &i2c_pins);
 }
@@ -36,6 +36,7 @@ void lcd_init_i2c()
 {
      // I2C configuration
     lcd_handler.Instance = I2C1;
+    // Timeing VALUE from STM MX tool
     lcd_handler.Init.Timing = 0x2000090E;
     lcd_handler.Init.OwnAddress1 = 0;
     lcd_handler.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
@@ -136,6 +137,7 @@ void lcd_write_char(uint8_t byte)
 {
     uint8_t buf[2];
 
+    // Set RS bit for writing chars
     buf[0] = LCD_CONTROL_RS;
     buf[1] = byte;
 

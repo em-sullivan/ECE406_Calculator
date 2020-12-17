@@ -69,7 +69,8 @@ uint8_t keypad_scan()
     HAL_GPIO_Init(GPIOC, &output);
 
     // Read to see if and input is high
-    if ((GPIOC->IDR & (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3])) == (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3]))
+    if ((GPIOC->IDR & (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3])) 
+        == (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3]))
         return 255;
 
     // Short delay before setting rows
@@ -93,7 +94,8 @@ uint8_t keypad_scan()
         udelay(40);
 
         // Checks if an input is being read (if and col pin is low)
-        if ((GPIOC->IDR & (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3])) != (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3])) {
+        if ((GPIOC->IDR & (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3])) 
+            != (keypad_cols[0] | keypad_cols[1] | keypad_cols[2] | keypad_cols[3])) {
             
             // Finds which column it is
             for (col = 0; col < KEYPAD_COL_SIZE; col++) {
@@ -139,27 +141,23 @@ uint8_t map_key(uint8_t key, uint8_t func)
         return mapped_keys[func][key];
 }
 
-
-/*
- * Fuction to read key with debouncing
- * work in progress
- */
 uint8_t read_key()
 {
-    uint16_t count;
+    uint8_t count;
     uint8_t current_read, last_read;
 
     count = 0;
     last_read = 255;
     current_read = 255;
 
-    // Waits for 5 scans for debounce
+    // Waits for 5 keys in a row for debounce
     while (count < 5) {
         current_read = keypad_scan();
-    	    if (current_read == last_read) {
-                count++;
-          } else {
-                count = 0;
+        if (current_read == last_read) {
+            count++;
+        // If key is different, reset count
+        } else {
+            count = 0;
         }
     	
         last_read = current_read;

@@ -5,6 +5,7 @@
  */
 
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -12,14 +13,15 @@
 #include "calc.h"
 #include "lcd-st7302.h"
 
-int eval_postfix(char *exp, double *ans)
+int32_t eval_postfix(char *exp, double *ans)
 {
     char *cp;
     double num1, num2, num3;
     char temp[20];
     struct stack *st;
-    int negative = 0;
-    
+    int8_t negative = 0;
+
+    // Create stack c  
     st = init_stack(MAXSTACK);
     if (st == NULL) {
         printf("Could not create struct!\n");
@@ -95,6 +97,13 @@ int eval_postfix(char *exp, double *ans)
         free_stack(st);
         return 5;
     }
+
+    // If there is still something on the stack, the expression
+    // is not valid, return error
+    if (!stack_isempty(st)) {
+        free_stack(st);
+        return 6;
+    }
     
     free_stack(st);
     *ans = num1;
@@ -105,6 +114,8 @@ double express(char op, double n1, double n2)
 {
     double ans;
 
+    // Perfrom math operation based on operator
+    // All bit operators will cast doubles as int
     switch(op) {
         case '+':
             ans = n1 + n2;
@@ -119,22 +130,22 @@ double express(char op, double n1, double n2)
             ans = n2 / n1;
             break;
         case '%':
-            ans = (int)n2 % (int)n1;
+            ans = (int32_t)n2 % (int32_t)n1;
             break;
         case '&':
-            ans = (int)n1 & (int)n2;
+            ans = (int32_t)n1 & (int32_t)n2;
             break;
         case '|':
-            ans = (int)n1 | (int)n2;
+            ans = (int32_t)n1 | (int32_t)n2;
             break;
         case '^':
-            ans = (int)n1 ^ (int)n2;
+            ans = (int32_t)n1 ^ (int32_t)n2;
             break;
         case '<':
-            ans = (int)n2 << (int)n1;
+            ans = (int32_t)n2 << (int32_t)n1;
             break;
         case '>':
-            ans = (signed int)n2 >> (int)n1;
+            ans = (int32_t)n2 >> (int32_t)n1;
             break;
         default:
             ans = 0; 
@@ -144,7 +155,7 @@ double express(char op, double n1, double n2)
     return ans;      
 }
 
-int precd(char op)
+int32_t precd(char op)
 {
     // Return precedence of operator
     switch(op) {
@@ -170,7 +181,7 @@ int precd(char op)
     return -1;
 }
 
-int infix_to_postfix(char *inexp, char *postexp)
+int32_t infix_to_postfix(char *inexp, char *postexp)
 {
     struct stack *st;
     char *infixp;
@@ -240,14 +251,14 @@ int infix_to_postfix(char *inexp, char *postexp)
         *postfixp = pop(st);
         postfixp++;
     }
-    
+
     // Adds null char to end of string
     *postfixp = '\0';
     free_stack(st);
     return 0;
 }
 
-int is_char_in_list(char *list, char c)
+int32_t is_char_in_list(char *list, char c)
 {
     char *curr;
     
@@ -261,10 +272,10 @@ int is_char_in_list(char *list, char c)
     return 0;
 }
 
-int convert_string(char *string, double *val)
+int32_t convert_string(char *string, double *val)
 {
     char start;
-    int index, exp_len, ex;
+    int32_t index, exp_len, ex;
 
     // Look at first character and find expression length
     start = *string;

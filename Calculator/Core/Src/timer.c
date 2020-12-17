@@ -13,15 +13,17 @@ static TIM_HandleTypeDef tim_handle;
 void timer_init(void)
 {
     uint32_t timer_ticks;
-
-    timer_ticks = (HAL_RCC_GetHCLKFreq() / 1000000);
     TIM_ClockConfigTypeDef clk = {0};
     TIM_MasterConfigTypeDef mst = {0};
+
 
     // Enable clock for TIMER 2
     __HAL_RCC_TIM2_CLK_ENABLE();
 
-    // Init Timer handler
+    // Calculate time ticks
+    timer_ticks = (HAL_RCC_GetHCLKFreq() / 1000000);
+
+    // Init Timer handler more micro-second delays
     tim_handle.Instance = TIMER;
     tim_handle.Init.Prescaler = timer_ticks - 1;
     tim_handle.Init.CounterMode = TIM_COUNTERMODE_UP;

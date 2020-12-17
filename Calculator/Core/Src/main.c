@@ -55,7 +55,7 @@ int main(void)
 
     // Set current map 0 and output mode to DEC
     map = 0;
-    ans = 0;
+    ans = 0; // This is used to check when an answer is displayed
     mode = DEC; // Start at integer math 
     
     while (1) {
@@ -64,9 +64,8 @@ int main(void)
         key = read_key();
 
         // Clear screen and expression buffer after writing new problem
-        // Does not clear screen if no key is pressed or key is backlight
-        // control
-        if ((ans && key != 255) && (ans && key != 'l')) {
+        // Does not clear screen if no key is pressed
+        if (ans && key != 255) {
             lcd_clear();
             memset(exp_buffer, 0, sizeof(exp_buffer));
             exp_p = exp_buffer;
@@ -159,8 +158,8 @@ int main(void)
             
             default:
                 // Checks if expression is longer then char limit of LCD screen
-                if ((exp_p - exp_buffer > 15) && (exp_p - exp_buffer < (BUFFER_SIZE - 1))) {
-
+                if ((exp_p - exp_buffer > 15) 
+                    && (exp_p - exp_buffer < (BUFFER_SIZE - 1))) {
                     // Prints screen from new starting point to 'scroll' screen
                     lcd_clear();
                     exp_start++;
@@ -214,8 +213,8 @@ void system_clock_init(void)
     osc.MSICalibrationValue = 0;
     osc.MSIClockRange = RCC_MSIRANGE_7;
     osc.PLL.PLLState = RCC_PLL_NONE;
-    if (HAL_RCC_OscConfig(&osc) != HAL_OK) {
-    }
+    HAL_RCC_OscConfig(&osc);
+    
 
     // Init CPU clock, AHB, APB1, APB2
     clk.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
@@ -224,18 +223,18 @@ void system_clock_init(void)
     clk.AHBCLKDivider = RCC_SYSCLK_DIV1;
     clk.APB1CLKDivider = RCC_HCLK_DIV1;
     clk.APB2CLKDivider = RCC_HCLK_DIV1;
-    if (HAL_RCC_ClockConfig(&clk, FLASH_LATENCY_4) != HAL_OK) {
-    }
+    HAL_RCC_ClockConfig(&clk, FLASH_LATENCY_4);
+    
 
     // Init perph clock for I2C1
     per.PeriphClockSelection = RCC_PERIPHCLK_I2C1;
     per.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
-    if (HAL_RCCEx_PeriphCLKConfig(&per) != HAL_OK) {
-    }
+    HAL_RCCEx_PeriphCLKConfig(&per);
+    
 
     // Configure the main internal regulator output voltage
-    if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK) {
-    }
+    HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1);
+    
 }
 
 /*

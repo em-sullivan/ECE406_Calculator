@@ -34,16 +34,19 @@ struct stack *init_stack(uint32_t size)
 
 uint32_t stack_size(struct stack *st)
 {
+    // Returns current size of stack
     return st->top + 1;
 }
 
 int8_t stack_isempty(struct stack *st)
 {
+    // Returns 1 if stack is empty, 0 if not
     return st->top == -1;
 }
 
 int8_t stack_isfull(struct stack *st)
 {
+    // Returns 1 if stack is full, 0 if not
     return st->top == (st->maxsize - 1);
 }
 
