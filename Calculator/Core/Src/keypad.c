@@ -36,7 +36,7 @@ void init_keypad_pins()
 
     // Configure col pins to be digital input
     gpio_col.Mode = GPIO_MODE_INPUT;
-    gpio_col.Pull = GPIO_PULLUP;
+    gpio_col.Pull = GPIO_NOPULL;
     gpio_col.Speed = GPIO_SPEED_FREQ_HIGH;
 
     // Enable clock, and pins for columns and backlight
