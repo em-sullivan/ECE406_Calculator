@@ -17,11 +17,11 @@ int32_t eval_postfix(char *exp, double *ans)
 {
     char *cp;
     double num1, num2, num3;
-    char temp[20];
+    char temp[MAXSTACK]; // Char buffer can hold a 32 char binary value
     struct stack *st;
     int8_t negative = 0;
 
-    // Create stack c  
+    // Create stack  
     st = init_stack(MAXSTACK);
     if (st == NULL) {
         printf("Could not create struct!\n");

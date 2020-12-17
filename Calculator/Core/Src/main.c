@@ -25,7 +25,7 @@ int main(void)
     uint8_t key, map;
     uint8_t mode, ans;
     char exp_buffer[BUFFER_SIZE]; // Input expression buffer
-    char post_fix[BUFFER_SIZE]; // Postfix expression buffer
+    char post_fix[BUFFER_SIZE + (BUFFER_SIZE / 2)]; // Postfix expression buffer
     char *exp_p; // Expression pointer
     char *exp_start;
     double res;
@@ -40,17 +40,11 @@ int main(void)
     // Timer Init
     timer_init();
 
-    // Init test LED
-    LED_Init();
-
     // Init LCD
     lcd_init();
 
     // Init keypad
     init_keypad_pins();
-
-    // Test LED that turns on when everything is set up correctly
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_SET);
 
     // Set current map 0 and output mode to DEC
     map = 0;
@@ -235,22 +229,4 @@ void system_clock_init(void)
     HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1);
     
 }
-
-/*
- * Init Green LED on Nucleo borad.
- * For testing purposes
- */
-void LED_Init(void)
-{
-    // Init PB13 for Green LED
-    GPIO_InitTypeDef green;
-
-    // Enable Clock for GPIOB
-    __GPIOB_CLK_ENABLE();
-
-    green.Pin = GPIO_PIN_13;
-    green.Mode = GPIO_MODE_OUTPUT_PP; // Output, push-pull
-    green.Speed = GPIO_SPEED_FREQ_MEDIUM; // Freq range for 5 MHz to 25 MHz
-    green.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(GPIOB, &green);
-}
+1+1+1+1+1212121212121212121212121

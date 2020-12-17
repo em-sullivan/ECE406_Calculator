@@ -6,9 +6,11 @@
 
 #ifndef TIMER_H
 #define TIMER_H
-
-#define TIMER TIM2
+ 
 #include <stdint.h>
+
+/* Define which timer is being used */
+#define TIMER TIM2 
 
 /*
  * Initilize timer 2 for delays
