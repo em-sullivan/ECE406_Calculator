@@ -323,7 +323,7 @@ int32_t convert_string(char *string, double *val)
 
             // Checks for incorrect chars
             index = strcspn(string, "ABCDEFobx");
-            if (index + 1 < exp_len) {
+            if (index < exp_len) {
                 return -4;
             }
             // Converts dec value to double

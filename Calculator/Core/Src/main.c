@@ -4,7 +4,6 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -169,13 +168,13 @@ int main(void)
                 if (exp_p - exp_buffer < (BUFFER_SIZE - 1)) {
 
                     // For special characters
-                    if (key == '<')
+                    if (key == '<') // <<
                         lcd_write_char(0xFB);
-                    else if (key == '>')
+                    else if (key == '>') // >>
                         lcd_write_char(0xFC);
                     
                     // Loads custom char for negative
-                    else if (key == '_')
+                    else if (key == '_') 
                         lcd_write_char(0x00);
                     else
                         // Write char normally
