@@ -229,4 +229,3 @@ void system_clock_init(void)
     HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1);
     
 }
-1+1+1+1+1212121212121212121212121
